@@ -74,7 +74,7 @@ export default async function InventoryPage({
             { value: "true", label: "Low stock only" },
           ]}
         />
-        <button type="submit" className={buttonPrimaryClass}>
+        <button type="submit" className={`${buttonPrimaryClass} w-full sm:w-auto`}>
           Filter
         </button>
       </form>

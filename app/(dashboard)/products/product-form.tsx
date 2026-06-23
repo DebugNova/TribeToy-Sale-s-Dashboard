@@ -53,12 +53,12 @@ export function ProductForm({
             defaultValue={product?.category ?? ""}
           />
           <div className="flex items-end pb-2">
-            <label className="flex items-center gap-2 text-sm font-medium text-gray-700">
+            <label className="flex cursor-pointer items-center gap-2.5 py-1 text-sm font-medium text-gray-700">
               <input
                 type="checkbox"
                 name="active"
                 defaultChecked={product ? product.active : true}
-                className="h-4 w-4 rounded border-gray-300"
+                className="h-5 w-5 rounded border-gray-300 accent-brand-600"
               />
               Active (available to sell)
             </label>

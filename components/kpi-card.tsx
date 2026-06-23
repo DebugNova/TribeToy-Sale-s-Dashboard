@@ -28,7 +28,7 @@ export function KpiCard({
         {label}
       </p>
       <p
-        className={`mt-1.5 text-2xl font-extrabold tabular-nums tracking-tight ${
+        className={`mt-1.5 text-[clamp(1.15rem,4.5vw,1.5rem)] font-extrabold leading-tight tabular-nums tracking-tight ${
           emphasis ? "text-blush-600" : "text-[#332f29]"
         }`}
       >

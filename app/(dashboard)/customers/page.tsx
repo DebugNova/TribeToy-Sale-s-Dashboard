@@ -58,7 +58,7 @@ export default async function CustomersPage({
             className={inputClass}
           />
         </div>
-        <button type="submit" className={buttonPrimaryClass}>
+        <button type="submit" className={`${buttonPrimaryClass} w-full sm:w-auto`}>
           Search
         </button>
       </form>

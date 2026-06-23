@@ -76,6 +76,23 @@ body {
   background-clip: padding-box;
 }
 
+/* Horizontal-scroll affordance for wide tables on small screens. Pure-CSS
+   "scrolling shadows" (Lea Verou's technique): a soft inset shadow appears at
+   whichever edge has more content to scroll toward, and hides itself at the
+   ends. The two white "cover" layers scroll WITH the content (background-
+   attachment: local) so at rest they mask the shadow; the radial shadows are
+   pinned to the box. Lives behind the cell text (backgrounds paint under
+   content), so nothing is ever obscured. No JS, no animation — cheap on
+   low-end devices and unaffected by reduced-motion. */
+.scroll-shadow-x {
+  overflow-x: auto;
+  background:
+    linear-gradient(to right, #fff 32%, rgba(255, 255, 255, 0)) 0 0 / 34px 100% no-repeat local,
+    linear-gradient(to left, #fff 32%, rgba(255, 255, 255, 0)) 100% 0 / 34px 100% no-repeat local,
+    radial-gradient(farthest-side at 0 50%, rgba(53, 48, 42, 0.13), rgba(53, 48, 42, 0)) 0 0 / 15px 100% no-repeat,
+    radial-gradient(farthest-side at 100% 50%, rgba(53, 48, 42, 0.13), rgba(53, 48, 42, 0)) 100% 0 / 15px 100% no-repeat;
+}
+
 /* Respect reduced-motion preferences on low-end / accessibility setups. */
 @media (prefers-reduced-motion: reduce) {
   *,

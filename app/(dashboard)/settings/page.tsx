@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { requireCapability } from "@/lib/auth/roles";
+import { PageHeader } from "@/components/page-header";
 import { SettingsForm } from "./settings-form";
 import { IntakePanel } from "./intake-panel";
 
@@ -14,12 +15,12 @@ export default async function SettingsPage() {
 
   return (
     <div>
-      <h1 className="text-xl font-semibold text-gray-900">Settings</h1>
-      <p className="mt-1 text-sm text-gray-500">
-        Sender details printed on shipping labels and the default courier.
-      </p>
+      <PageHeader
+        title="Settings"
+        description="Sender details printed on shipping labels and the default courier."
+      />
 
-      <div className="mt-6">
+      <div>
         {error || !settings ? (
           <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">
             Could not load settings{error ? `: ${error.message}` : ""}.
@@ -30,7 +31,7 @@ export default async function SettingsPage() {
       </div>
 
       <div className="mt-10 border-t border-line pt-8">
-        <h2 className="text-lg font-semibold text-gray-900">Website intake (Phase 4)</h2>
+        <h2 className="text-lg font-bold text-[#332f29]">Website intake (Phase 4)</h2>
         <p className="mt-1 text-sm text-gray-500">
           Auto-import orders from the custom website via the signed intake API.
         </p>

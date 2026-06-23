@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Nunito, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
@@ -22,6 +22,16 @@ export const metadata: Metadata = {
   title: "TribeToy · Commerce Dashboard",
   description: "Sales & operations dashboard for TribeToy.",
   icons: { icon: "/tribetoy-logo.png" },
+};
+
+// Mobile-first viewport. width=device-width + initial-scale keeps phones from
+// rendering at a zoomed-out desktop width; we leave pinch-zoom enabled (no
+// maximum-scale) for accessibility. themeColor tints the mobile browser chrome
+// in TribeToy leaf-green.
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  themeColor: "#5f9e2b",
 };
 
 export default function RootLayout({

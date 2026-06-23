@@ -8,7 +8,9 @@ sales analytics. Built lean now, on a schema/architecture designed to grow into 
 
 > **Status (2026-06):** Phases **0–5 complete & verified — v1 is feature-complete**, plus a
 > brand/UI redesign — lighter green, a custom `Select` replacing every native dropdown, a custom
-> `DateRangePicker`, and more detailed charts (see [Frontend & UI/UX rules](#frontend--uiux-rules-read-before-any-ui-task)
+> `DateRangePicker` + single-day `DatePicker`, more detailed charts, and a **full
+> mobile-responsiveness pass** (no native controls anywhere; wide tables scroll with an edge-fade
+> affordance; fluid type/filters from ~320px up) (see [Frontend & UI/UX rules](#frontend--uiux-rules-read-before-any-ui-task)
 > + [Design system](#design-system)). See [PROGRESS.md](PROGRESS.md) for
 > the per-phase ledger and [AUDIT.md](AUDIT.md) for the last A–Z re-verification (build/lint
 > clean, live DB matches code). Migrations **0001–0010** are applied. Before go-live, see
@@ -86,7 +88,11 @@ Env vars live in `.env.local` (not committed): `NEXT_PUBLIC_SUPABASE_URL`,
   optional `searchable`, click-outside/Esc, ARIA listbox; hidden `<input>` for forms.
   **Use it for every dropdown — never a native `<select>`.** Modes: controlled
   (`value`+`onValueChange`), uncontrolled (`defaultValue`), or form (`name`).
-- `table.tsx` — exports **`thClass` / `tdClass` / `DataTable`**.
+- **`date-picker.tsx` — single-day `DatePicker`** (branded popover calendar, keyboard +
+  outside-click/Esc, hidden `<input>` for forms). The single-date sibling of `DateRangePicker`;
+  use it instead of `<input type="date">` (e.g. shipment dispatch date).
+- `table.tsx` — exports **`thClass` / `tdClass` / `DataTable`**. Wide tables scroll horizontally
+  on small screens inside a `.scroll-shadow-x` container (CSS-only edge-fade hint; see globals.css).
 - `spinner.tsx` (`Spinner`, `HamburgerLoader`, `LoadingState`), `skeleton.tsx`.
 - `panel.tsx`, `kpi-card.tsx`, `status-badge.tsx`, `export-csv-button.tsx`,
   `label-download-button.tsx`, `reveal-field.tsx`, `page-placeholder.tsx`.
@@ -132,9 +138,9 @@ done **right and in full on the first pass**.
 2. **Never ship a native browser control in the UI.** They look dated and are the first thing
    the user rejects. Specifically:
    - Dropdowns → **`Select` from `components/select.tsx`** (never `<select>`/`<option>`).
-   - Date / date-range → **`DateRangePicker`** (`app/(dashboard)/date-range-picker.tsx`), never
-     `<input type="date">`. (Two single-date filters on `orders`/`audit` are the only remaining
-     native date inputs — replace them too if you touch those forms.)
+   - Date / date-range → **`DateRangePicker`** (`app/(dashboard)/date-range-picker.tsx`) for a
+     range, or **`DatePicker`** (`components/date-picker.tsx`) for a single day — never
+     `<input type="date">`. (All native date inputs have been replaced; keep it that way.)
    - Custom popovers must be: whole trigger clickable (not just an icon), keyboard-accessible,
      close on outside-click/Esc, animate with `.animate-fade-rise`.
 3. **Apply a pattern site-wide.** Before saying a UI pattern is done, `grep` the whole repo for

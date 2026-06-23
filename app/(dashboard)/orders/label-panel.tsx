@@ -6,6 +6,7 @@ import { generateLabel, updateShipmentAwb } from "@/lib/labels/pdf";
 import { LabelDownloadButton } from "@/components/label-download-button";
 import { inputClass } from "@/components/form";
 import { Select } from "@/components/select";
+import { DatePicker } from "@/components/date-picker";
 import { buttonSecondaryClass } from "@/components/page-header";
 import { COURIER_LABEL } from "@/lib/labels/courier";
 import { Constants } from "@/lib/supabase/database.types";
@@ -37,7 +38,7 @@ const primaryBtn =
   "inline-flex items-center justify-center gap-1.5 rounded-xl bg-brand-600 px-3 py-2 text-sm font-semibold text-white shadow-sm shadow-brand-600/20 transition hover:bg-brand-700 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60";
 
 function todayIST(): string {
-  // en-CA renders as YYYY-MM-DD, which is what <input type="date"> expects.
+  // en-CA renders as YYYY-MM-DD, the plain calendar-day string DatePicker uses.
   return new Date().toLocaleDateString("en-CA", { timeZone: "Asia/Kolkata" });
 }
 
@@ -155,11 +156,10 @@ export function LabelPanel({
                 <label className="mb-1 block text-xs font-medium text-gray-600">
                   Dispatch date
                 </label>
-                <input
-                  type="date"
+                <DatePicker
                   value={dispatchDate}
-                  onChange={(e) => setDispatchDate(e.target.value)}
-                  className={inputClass}
+                  onValueChange={setDispatchDate}
+                  ariaLabel="Dispatch date"
                 />
               </div>
             </div>
@@ -224,11 +224,10 @@ export function LabelPanel({
                 <label className="mb-1 block text-xs font-medium text-gray-600">
                   Dispatch date
                 </label>
-                <input
-                  type="date"
+                <DatePicker
                   value={dispatchDate}
-                  onChange={(e) => setDispatchDate(e.target.value)}
-                  className={inputClass}
+                  onValueChange={setDispatchDate}
+                  ariaLabel="Dispatch date"
                 />
               </div>
             </div>

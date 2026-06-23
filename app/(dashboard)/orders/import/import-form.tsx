@@ -87,8 +87,8 @@ export function ImportForm() {
           <h2 className="text-sm font-bold text-[#332f29]">
             Preview — {orders.length} order(s) from {fileName}
           </h2>
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm">
+          <div className="scroll-shadow-x">
+            <table className="w-full min-w-[36rem] text-left text-sm">
               <thead>
                 <tr className="border-b border-line text-xs uppercase tracking-wide text-gray-500">
                   <th className="py-2 pr-4 font-medium">Amazon order id</th>

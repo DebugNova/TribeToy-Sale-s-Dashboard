@@ -1,14 +1,35 @@
 import { PageHeader, buttonPrimaryClass, buttonSecondaryClass } from "@/components/page-header";
 import { DataTable, tdClass } from "@/components/table";
-import { inputClass } from "@/components/form";
 import { Select } from "@/components/select";
 import { createClient } from "@/lib/supabase/server";
 import { requireCapability } from "@/lib/auth/roles";
 import { formatDateTime } from "@/lib/format";
 import { AuditDiff } from "./audit-diff";
+import { DateRangePicker } from "../date-range-picker";
 import Link from "next/link";
 
 export const dynamic = "force-dynamic";
+
+// Labeled filter-field wrapper so the audit filter card matches the dashboard +
+// orders filters and stacks cleanly on phones.
+function FilterField({
+  label,
+  className = "",
+  children,
+}: {
+  label: string;
+  className?: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className={`flex flex-col gap-1.5 ${className}`}>
+      <span className="text-[11px] font-semibold uppercase tracking-wide text-[#8a8076]">
+        {label}
+      </span>
+      {children}
+    </div>
+  );
+}
 
 const PAGE_SIZE = 200;
 const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/;
@@ -55,48 +76,46 @@ export default async function AuditPage({ searchParams }: { searchParams: Search
         description="Every status change, stock movement, label event and sensitive-field reveal — who, when, and what changed."
       />
 
-      <form method="get" className="mb-4 flex flex-wrap items-end gap-3">
-        <div>
-          <label className="mb-1 block text-xs font-medium text-gray-500">Entity</label>
+      <form
+        method="get"
+        className="mb-4 grid grid-cols-1 gap-x-4 gap-y-4 rounded-2xl border border-line bg-white p-4 shadow-sm shadow-black/[0.03] sm:grid-cols-2 sm:p-5 lg:grid-cols-4"
+      >
+        <FilterField label="Entity">
           <Select
             name="entity"
             defaultValue={sp.entity ?? ""}
             ariaLabel="Entity"
-            className="w-48"
             options={[
               { value: "", label: "All entities" },
               ...entities.map((e) => ({ value: e, label: e })),
             ]}
           />
-        </div>
-        <div>
-          <label className="mb-1 block text-xs font-medium text-gray-500">Actor</label>
+        </FilterField>
+        <FilterField label="Actor">
           <Select
             name="actor"
             defaultValue={sp.actor ?? ""}
             ariaLabel="Actor"
             searchable
-            className="w-48"
             options={[
               { value: "", label: "All actors" },
               ...actors.map((a) => ({ value: a.id, label: a.name ?? a.id })),
             ]}
           />
+        </FilterField>
+        <DateRangePicker
+          from={sp.from ?? ""}
+          to={sp.to ?? ""}
+          className="sm:col-span-2 lg:col-span-2"
+        />
+        <div className="flex flex-wrap items-center gap-2 border-t border-line pt-4 sm:col-span-2 lg:col-span-4">
+          <button type="submit" className={`${buttonPrimaryClass} w-full sm:w-auto`}>
+            Apply
+          </button>
+          <Link href="/audit" className={`${buttonSecondaryClass} w-full sm:w-auto`}>
+            Reset
+          </Link>
         </div>
-        <div>
-          <label className="mb-1 block text-xs font-medium text-gray-500">From</label>
-          <input type="date" name="from" defaultValue={sp.from ?? ""} className={inputClass} />
-        </div>
-        <div>
-          <label className="mb-1 block text-xs font-medium text-gray-500">To</label>
-          <input type="date" name="to" defaultValue={sp.to ?? ""} className={inputClass} />
-        </div>
-        <button type="submit" className={buttonPrimaryClass}>
-          Apply
-        </button>
-        <Link href="/audit" className={buttonSecondaryClass}>
-          Reset
-        </Link>
       </form>
 
       <DataTable

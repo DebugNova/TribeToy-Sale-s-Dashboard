@@ -80,7 +80,7 @@ export default async function ProductsPage({
             { value: "false", label: "Inactive only" },
           ]}
         />
-        <button type="submit" className={buttonPrimaryClass}>
+        <button type="submit" className={`${buttonPrimaryClass} w-full sm:w-auto`}>
           Filter
         </button>
       </form>

@@ -129,7 +129,13 @@ export function RevenueTrendChart({ data }: { data: TrendPoint[] }) {
           </linearGradient>
         </defs>
         <CartesianGrid strokeDasharray="3 3" stroke={GRID_STROKE} vertical={false} />
-        <XAxis dataKey="day" tickFormatter={shortDay} {...axisProps} />
+        <XAxis
+          dataKey="day"
+          tickFormatter={shortDay}
+          minTickGap={24}
+          interval="preserveStartEnd"
+          {...axisProps}
+        />
         <YAxis tickFormatter={compactINR} width={56} {...axisProps} />
         <Tooltip
           cursor={{ fill: "rgba(95,158,43,0.06)" }}
@@ -173,7 +179,13 @@ export function OrdersTrendChart({ data }: { data: TrendPoint[] }) {
           </linearGradient>
         </defs>
         <CartesianGrid strokeDasharray="3 3" stroke={GRID_STROKE} vertical={false} />
-        <XAxis dataKey="day" tickFormatter={shortDay} {...axisProps} />
+        <XAxis
+          dataKey="day"
+          tickFormatter={shortDay}
+          minTickGap={24}
+          interval="preserveStartEnd"
+          {...axisProps}
+        />
         <YAxis allowDecimals={false} width={32} {...axisProps} />
         <Tooltip
           cursor={{ stroke: "#e34f8c", strokeWidth: 1, strokeDasharray: "4 4" }}

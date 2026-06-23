@@ -115,8 +115,8 @@ await fetch("${endpoint}", {
             No intake activity yet.
           </p>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm">
+          <div className="scroll-shadow-x">
+            <table className="w-full min-w-[40rem] text-left text-sm">
               <thead>
                 <tr className="border-b border-line text-xs uppercase tracking-wide text-gray-500">
                   <th className="py-2 pr-4 font-medium">When</th>

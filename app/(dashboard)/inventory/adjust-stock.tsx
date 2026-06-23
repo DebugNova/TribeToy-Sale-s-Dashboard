@@ -34,7 +34,7 @@ function AdjustModal({
       onClick={onClose}
     >
       <div
-        className="w-full max-w-md rounded-2xl border border-line bg-white p-6 shadow-2xl"
+        className="max-h-[90vh] w-full max-w-md overflow-y-auto rounded-2xl border border-line bg-white p-6 shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
         <h2 className="text-base font-bold text-[#332f29]">Adjust stock</h2>

@@ -17,32 +17,37 @@ export function DataTable({
   children: React.ReactNode;
 }) {
   return (
-    <div className="overflow-x-auto rounded-2xl border border-line bg-white shadow-sm shadow-black/[0.03]">
-      <table className="w-full border-collapse">
-        <thead className="border-b border-line bg-cream-100/70">
-          <tr>
-            {columns.map((c) => (
-              <th key={c} className={thClass}>
-                {c}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody className="divide-y divide-line/70">
-          {isEmpty ? (
+    <div className="rounded-2xl border border-line bg-white shadow-sm shadow-black/[0.03]">
+      {/* Inner scroll container: keeps wide tables from breaking the page on
+          small screens and shows a soft edge shadow hinting there's more to
+          swipe. The card frame (border/shadow) stays put on the outer div. */}
+      <div className="scroll-shadow-x rounded-2xl">
+        <table className="w-full border-collapse">
+          <thead className="border-b border-line bg-cream-100/70">
             <tr>
-              <td
-                colSpan={columns.length}
-                className="px-4 py-14 text-center text-sm text-[#a89e90]"
-              >
-                {emptyMessage}
-              </td>
+              {columns.map((c) => (
+                <th key={c} className={thClass}>
+                  {c}
+                </th>
+              ))}
             </tr>
-          ) : (
-            children
-          )}
-        </tbody>
-      </table>
+          </thead>
+          <tbody className="divide-y divide-line/70">
+            {isEmpty ? (
+              <tr>
+                <td
+                  colSpan={columns.length}
+                  className="px-4 py-14 text-center text-sm text-[#a89e90]"
+                >
+                  {emptyMessage}
+                </td>
+              </tr>
+            ) : (
+              children
+            )}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }

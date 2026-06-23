@@ -30,19 +30,19 @@ export default async function EditCustomerPage({
       {canWrite ? (
         <CustomerForm customer={customer} />
       ) : (
-        <dl className="grid max-w-xl grid-cols-3 gap-x-4 gap-y-3 rounded-xl border border-line bg-white p-5 text-sm">
+        <dl className="grid max-w-xl grid-cols-1 gap-x-4 gap-y-1 rounded-xl border border-line bg-white p-5 text-sm sm:grid-cols-3 sm:gap-y-3">
           <dt className="text-gray-500">Type</dt>
-          <dd className="col-span-2 uppercase text-gray-900">{customer.type}</dd>
+          <dd className="mb-1.5 sm:mb-0 sm:col-span-2 uppercase text-gray-900">{customer.type}</dd>
           <dt className="text-gray-500">Phone</dt>
-          <dd className="col-span-2 text-gray-900">
+          <dd className="mb-1.5 sm:mb-0 sm:col-span-2 text-gray-900">
             <RevealField masked={maskPhone(customer.phone)} revealKey="customer.phone" id={customer.id} />
           </dd>
           <dt className="text-gray-500">Email</dt>
-          <dd className="col-span-2 text-gray-900">{customer.email ?? "—"}</dd>
+          <dd className="mb-1.5 sm:mb-0 sm:col-span-2 text-gray-900">{customer.email ?? "—"}</dd>
           <dt className="text-gray-500">GSTIN</dt>
-          <dd className="col-span-2 text-gray-900">{customer.gstin ?? "—"}</dd>
+          <dd className="mb-1.5 sm:mb-0 sm:col-span-2 text-gray-900">{customer.gstin ?? "—"}</dd>
           <dt className="text-gray-500">Address</dt>
-          <dd className="col-span-2 text-gray-900">
+          <dd className="mb-1.5 sm:mb-0 sm:col-span-2 text-gray-900">
             {[customer.address_line, customer.city, customer.state, customer.pincode]
               .filter(Boolean)
               .join(", ") || "—"}
@@ -50,7 +50,7 @@ export default async function EditCustomerPage({
           {customer.notes && (
             <>
               <dt className="text-gray-500">Notes</dt>
-              <dd className="col-span-2 text-gray-700">{customer.notes}</dd>
+              <dd className="mb-1.5 sm:mb-0 sm:col-span-2 text-gray-700">{customer.notes}</dd>
             </>
           )}
         </dl>

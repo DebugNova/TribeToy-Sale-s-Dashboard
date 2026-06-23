@@ -3,6 +3,7 @@
 // consistent with the Phase 0 shell (see app/(dashboard)/settings/settings-form.tsx).
 
 import type { InputHTMLAttributes, SelectHTMLAttributes, TextareaHTMLAttributes } from "react";
+import { Spinner } from "@/components/spinner";
 
 export const inputClass =
   "w-full rounded-xl border border-line bg-white px-3 py-2 text-sm text-[#3a352f] outline-none transition placeholder:text-[#b3a99b] focus:border-brand-400 focus:ring-2 focus:ring-brand-200 disabled:bg-cream-100 disabled:text-[#9a9084]";
@@ -98,8 +99,10 @@ export function SubmitButton({
     <button
       type="submit"
       disabled={pending}
-      className="inline-flex items-center justify-center rounded-xl bg-brand-600 px-4 py-2 text-sm font-semibold text-white shadow-sm shadow-brand-600/20 transition hover:bg-brand-700 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60"
+      aria-busy={pending}
+      className="inline-flex items-center justify-center gap-2 rounded-xl bg-brand-600 px-4 py-2 text-sm font-semibold text-white shadow-sm shadow-brand-600/20 transition hover:bg-brand-700 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60"
     >
+      {pending && <Spinner size="sm" />}
       {children}
     </button>
   );

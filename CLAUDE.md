@@ -39,12 +39,14 @@ Recharts · @react-pdf/renderer + qrcode (labels) · Zod (validation) · deploye
 Phases **0 → 5** (see [docs/phases/README.md](docs/phases/README.md)). Don't start a phase
 until the previous one's acceptance criteria pass.
 
-> **Status (2026-06-23):** Phases **0 and 1 are complete & verified** — see
-> [PROGRESS.md](PROGRESS.md) for the ledger. **Next up: Phase 2 (labels).** Migrations
-> **0001–0006** are applied (Phase 0 = 0001–0005; Phase 1 added `0006_inventory_rpcs`);
-> continue numbering from **0007**. Note: the phase docs' later migration labels (e.g.
-> `0004_inventory_rpcs`, `0005_analytics`) are off by the Phase-0 offset — keep the folder
-> monotonic instead.
+> **Status (2026-06-23):** Phases **0–5 are all complete & verified — v1 is feature-complete**
+> — see [PROGRESS.md](PROGRESS.md) for the per-phase ledger and [AUDIT.md](AUDIT.md) for the
+> latest full A–Z re-verification (build/lint clean, live DB matches code, no critical
+> advisors). Migrations **0001–0010** are applied. Before go-live, see AUDIT.md §3.3 chores
+> (rotate keys, remove the `*.test@tribetoy.test` users, change the founder password, optional
+> demo-data cleanup, Vercel deploy, backups). Note: the phase docs' later migration labels
+> (e.g. `0004_inventory_rpcs`, `0005_analytics`) are off by the Phase-0 offset — the saved
+> folder is monotonic 0001–0010 instead.
 
 | # | Builds |
 |---|---|

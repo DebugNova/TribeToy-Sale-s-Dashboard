@@ -63,10 +63,10 @@ export function LifecycleActions({
               type="button"
               onClick={() => run(to)}
               disabled={pending !== null}
-              className={`inline-flex items-center rounded-lg px-3 py-2 text-sm font-medium transition disabled:cursor-not-allowed disabled:opacity-60 ${
+              className={`inline-flex items-center justify-center rounded-xl px-3 py-2 text-sm font-semibold shadow-sm transition active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60 ${
                 danger
-                  ? "border border-red-300 text-red-700 hover:bg-red-50"
-                  : "bg-gray-900 text-white hover:bg-gray-800"
+                  ? "border border-red-200 bg-white text-red-600 hover:border-red-300 hover:bg-red-50"
+                  : "bg-brand-600 text-white shadow-brand-600/20 hover:bg-brand-700"
               }`}
             >
               {pending === to ? "Working…" : TRANSITION_LABEL[to]}

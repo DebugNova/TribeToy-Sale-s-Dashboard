@@ -1,13 +1,101 @@
 @import "tailwindcss";
 
-@theme inline {
-  --font-sans: var(--font-geist-sans);
+/*
+  TribeToy brand theme. Colours are drawn from the storefront: a natural leaf
+  green (logo / "eco-friendly"), a soft blush pink (hero + Instagram accents)
+  and a warm cream canvas. Defining them under @theme generates the matching
+  utilities (bg-brand-600, text-blush-500, border-line, …) used across the app.
+*/
+@theme {
+  --font-sans: var(--font-nunito);
   --font-mono: var(--font-geist-mono);
+
+  /* Leaf green — primary brand (fresh, lighter spring-leaf tone) */
+  --color-brand-50: #f4faea;
+  --color-brand-100: #e6f4cf;
+  --color-brand-200: #cde8a3;
+  --color-brand-300: #aed975;
+  --color-brand-400: #8fc846;
+  --color-brand-500: #6fad2e;
+  --color-brand-600: #54902a;
+  --color-brand-700: #437121;
+  --color-brand-800: #375d1f;
+  --color-brand-900: #2f4d1d;
+
+  /* Blush pink — accent */
+  --color-blush-50: #fdf2f7;
+  --color-blush-100: #fbe4ef;
+  --color-blush-200: #f8cadf;
+  --color-blush-300: #f3a3c6;
+  --color-blush-400: #ec73a6;
+  --color-blush-500: #e34f8c;
+  --color-blush-600: #cf3576;
+
+  /* Warm cream — canvas + surfaces */
+  --color-cream-50: #fdfbf7;
+  --color-cream-100: #faf6ee;
+  --color-cream-200: #f3ebdd;
+  --color-cream-300: #e9dcc8;
+
+  /* Warm hairline border used on cards, tables, dividers */
+  --color-line: #ece4d8;
 }
 
 html,
 body {
-  background: #f9fafb; /* gray-50 */
-  color: #111827; /* gray-900 */
-  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+  background: var(--color-cream-100);
+  color: #3a352f; /* warm near-black, easier on the eyes than cold gray-900 */
+  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Friendlier focus ring in the brand colour (keyboard users + low-end browsers). */
+:focus-visible {
+  outline: 2px solid var(--color-brand-500);
+  outline-offset: 2px;
+}
+
+/* Soft, unobtrusive scrollbars that match the warm palette. */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-cream-300) transparent;
+}
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+*::-webkit-scrollbar-thumb {
+  background-color: var(--color-cream-300);
+  border-radius: 9999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+*::-webkit-scrollbar-thumb:hover {
+  background-color: var(--color-brand-300);
+  background-clip: padding-box;
+}
+
+/* Respect reduced-motion preferences on low-end / accessibility setups. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Gentle entrance for the mobile nav drawer. */
+@keyframes slide-in-left {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+.animate-drawer {
+  animation: slide-in-left 0.22s cubic-bezier(0.16, 1, 0.3, 1);
 }

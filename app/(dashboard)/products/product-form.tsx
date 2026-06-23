@@ -29,7 +29,7 @@ export function ProductForm({
     <form action={formAction} className="max-w-3xl space-y-6">
       {product && <input type="hidden" name="id" value={product.id} />}
 
-      <fieldset className="space-y-4 rounded-xl border border-gray-200 bg-white p-6">
+      <fieldset className="space-y-4 rounded-xl border border-line bg-white p-6">
         <legend className="px-1 text-sm font-semibold text-gray-900">Details</legend>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <TextField
@@ -72,7 +72,7 @@ export function ProductForm({
         />
       </fieldset>
 
-      <fieldset className="space-y-4 rounded-xl border border-gray-200 bg-white p-6">
+      <fieldset className="space-y-4 rounded-xl border border-line bg-white p-6">
         <legend className="px-1 text-sm font-semibold text-gray-900">
           Pricing (INR)
         </legend>
@@ -105,7 +105,7 @@ export function ProductForm({
         </div>
       </fieldset>
 
-      <fieldset className="space-y-4 rounded-xl border border-gray-200 bg-white p-6">
+      <fieldset className="space-y-4 rounded-xl border border-line bg-white p-6">
         <legend className="px-1 text-sm font-semibold text-gray-900">
           Parcel dimensions
         </legend>
@@ -117,7 +117,7 @@ export function ProductForm({
         </div>
       </fieldset>
 
-      <fieldset className="space-y-4 rounded-xl border border-gray-200 bg-white p-6">
+      <fieldset className="space-y-4 rounded-xl border border-line bg-white p-6">
         <legend className="px-1 text-sm font-semibold text-gray-900">Inventory</legend>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           {isEdit ? (
@@ -127,7 +127,7 @@ export function ProductForm({
                 id="on_hand_display"
                 value={inventory?.on_hand ?? 0}
                 disabled
-                className="w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm text-gray-500"
+                className="w-full rounded-lg border border-line bg-gray-50 px-3 py-2 text-sm text-gray-500"
               />
               <p className="mt-1 text-xs text-gray-400">
                 Change stock from the Inventory screen (a reason is required and logged).

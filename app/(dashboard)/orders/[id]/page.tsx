@@ -136,7 +136,7 @@ export default async function OrderDetailPage({
       </div>
 
       {/* Lifecycle actions */}
-      <section className="mb-6 rounded-xl border border-gray-200 bg-white p-5">
+      <section className="mb-6 rounded-xl border border-line bg-white p-5">
         <h2 className="mb-3 text-sm font-semibold text-gray-900">Actions</h2>
         {canWriteOrders ? (
           <LifecycleActions orderId={order.id} allowed={allowed} />
@@ -148,7 +148,7 @@ export default async function OrderDetailPage({
       </section>
 
       {/* Shipping label */}
-      <section className="mb-6 rounded-xl border border-gray-200 bg-white p-5">
+      <section className="mb-6 rounded-xl border border-line bg-white p-5">
         <h2 className="mb-3 text-sm font-semibold text-gray-900">Shipping label</h2>
         {canManageShipments ? (
           <LabelPanel
@@ -177,7 +177,7 @@ export default async function OrderDetailPage({
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         {/* Customer + ship-to */}
-        <section className="rounded-xl border border-gray-200 bg-white p-5">
+        <section className="rounded-xl border border-line bg-white p-5">
           <h2 className="mb-3 text-sm font-semibold text-gray-900">Customer</h2>
           {customer ? (
             <p className="text-sm text-gray-700">
@@ -218,7 +218,7 @@ export default async function OrderDetailPage({
         </section>
 
         {/* Totals */}
-        <section className="rounded-xl border border-gray-200 bg-white p-5">
+        <section className="rounded-xl border border-line bg-white p-5">
           <h2 className="mb-3 text-sm font-semibold text-gray-900">Totals</h2>
           <dl className="space-y-1 text-sm">
             <div className="flex justify-between text-gray-600">
@@ -237,7 +237,7 @@ export default async function OrderDetailPage({
               <dt>Shipping</dt>
               <dd>{formatINR(order.shipping_charge)}</dd>
             </div>
-            <div className="flex justify-between border-t border-gray-100 pt-1 text-base font-semibold text-gray-900">
+            <div className="flex justify-between border-t border-line pt-1 text-base font-semibold text-gray-900">
               <dt>Total</dt>
               <dd>{formatINR(order.total)}</dd>
             </div>
@@ -250,7 +250,7 @@ export default async function OrderDetailPage({
         </section>
 
         {/* Activity / audit */}
-        <section className="rounded-xl border border-gray-200 bg-white p-5">
+        <section className="rounded-xl border border-line bg-white p-5">
           <h2 className="mb-3 text-sm font-semibold text-gray-900">Activity</h2>
           {auditRows.length === 0 ? (
             <p className="text-sm text-gray-400">No activity yet.</p>

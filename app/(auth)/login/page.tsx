@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/browser";
 
@@ -34,21 +35,45 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-gray-50 px-4">
-      <div className="w-full max-w-sm">
-        <div className="mb-8 text-center">
-          <h1 className="text-2xl font-semibold text-gray-900">TribeToy</h1>
-          <p className="mt-1 text-sm text-gray-500">Commerce Dashboard</p>
+    <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-cream-100 px-4 py-10">
+      {/* Soft brand glows in the background for a cozy, on-brand feel. */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -top-24 -left-24 h-72 w-72 rounded-full bg-brand-200/40 blur-3xl"
+      />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -bottom-24 -right-24 h-72 w-72 rounded-full bg-blush-200/40 blur-3xl"
+      />
+
+      <div className="relative w-full max-w-sm">
+        <div className="mb-8 flex flex-col items-center text-center">
+          <div className="mb-3 rounded-2xl bg-white p-3 shadow-sm ring-1 ring-line">
+            <Image
+              src="/tribetoy-logo.png"
+              alt="TribeToy"
+              width={120}
+              height={130}
+              priority
+              className="h-28 w-auto"
+            />
+          </div>
+          <h1 className="text-2xl font-extrabold tracking-tight text-brand-600">
+            TribeToy
+          </h1>
+          <p className="mt-1 text-sm font-medium text-blush-500">
+            Commerce Dashboard
+          </p>
         </div>
 
         <form
           onSubmit={handleSubmit}
-          className="space-y-4 rounded-xl border border-gray-200 bg-white p-6 shadow-sm"
+          className="space-y-4 rounded-2xl border border-line bg-white p-6 shadow-sm shadow-black/[0.04]"
         >
           <div>
             <label
               htmlFor="email"
-              className="mb-1 block text-sm font-medium text-gray-700"
+              className="mb-1.5 block text-sm font-semibold text-[#574f47]"
             >
               Email
             </label>
@@ -59,14 +84,14 @@ export default function LoginPage() {
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 outline-none focus:border-gray-900 focus:ring-1 focus:ring-gray-900"
+              className="w-full rounded-xl border border-line bg-white px-3 py-2 text-sm text-[#3a352f] outline-none transition placeholder:text-[#b3a99b] focus:border-brand-400 focus:ring-2 focus:ring-brand-200"
             />
           </div>
 
           <div>
             <label
               htmlFor="password"
-              className="mb-1 block text-sm font-medium text-gray-700"
+              className="mb-1.5 block text-sm font-semibold text-[#574f47]"
             >
               Password
             </label>
@@ -77,12 +102,12 @@ export default function LoginPage() {
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 outline-none focus:border-gray-900 focus:ring-1 focus:ring-gray-900"
+              className="w-full rounded-xl border border-line bg-white px-3 py-2 text-sm text-[#3a352f] outline-none transition placeholder:text-[#b3a99b] focus:border-brand-400 focus:ring-2 focus:ring-brand-200"
             />
           </div>
 
           {error && (
-            <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">
+            <p className="rounded-xl bg-red-50 px-3 py-2 text-sm font-medium text-red-700">
               {error}
             </p>
           )}
@@ -90,13 +115,13 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full rounded-lg bg-gray-900 px-3 py-2 text-sm font-medium text-white transition hover:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-60"
+            className="w-full rounded-xl bg-brand-600 px-3 py-2.5 text-sm font-semibold text-white shadow-sm shadow-brand-600/20 transition hover:bg-brand-700 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60"
           >
             {loading ? "Signing in…" : "Sign in"}
           </button>
         </form>
 
-        <p className="mt-4 text-center text-xs text-gray-400">
+        <p className="mt-4 text-center text-xs text-[#a89e90]">
           Founders only · TIC, IIT Guwahati
         </p>
       </div>

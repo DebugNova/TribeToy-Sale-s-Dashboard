@@ -60,9 +60,9 @@ await fetch("${endpoint}", {
 
   return (
     <div className="max-w-3xl space-y-6">
-      <section className="space-y-4 rounded-xl border border-gray-200 bg-white p-6">
+      <section className="space-y-4 rounded-2xl border border-line bg-white p-6 shadow-sm shadow-black/[0.03]">
         <div>
-          <h2 className="text-sm font-semibold text-gray-900">Website intake endpoint</h2>
+          <h2 className="text-sm font-bold text-[#332f29]">Website intake endpoint</h2>
           <p className="mt-1 text-sm text-gray-500">
             Point your website&apos;s order webhook here. Each request must be signed with the
             shared secret <code className="font-mono text-gray-700">INTAKE_WEBHOOK_SECRET</code>{" "}
@@ -102,9 +102,9 @@ await fetch("${endpoint}", {
         </p>
       </section>
 
-      <section className="space-y-3 rounded-xl border border-gray-200 bg-white p-6">
+      <section className="space-y-3 rounded-2xl border border-line bg-white p-6 shadow-sm shadow-black/[0.03]">
         <div>
-          <h2 className="text-sm font-semibold text-gray-900">Recent intake activity</h2>
+          <h2 className="text-sm font-bold text-[#332f29]">Recent intake activity</h2>
           <p className="mt-1 text-sm text-gray-500">
             Last 15 intake attempts (website &amp; CSV imports) for debugging.
           </p>
@@ -118,7 +118,7 @@ await fetch("${endpoint}", {
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm">
               <thead>
-                <tr className="border-b border-gray-200 text-xs uppercase tracking-wide text-gray-500">
+                <tr className="border-b border-line text-xs uppercase tracking-wide text-gray-500">
                   <th className="py-2 pr-4 font-medium">When</th>
                   <th className="py-2 pr-4 font-medium">Channel</th>
                   <th className="py-2 pr-4 font-medium">Status</th>
@@ -129,7 +129,7 @@ await fetch("${endpoint}", {
               </thead>
               <tbody>
                 {events.map((e) => (
-                  <tr key={e.id} className="border-b border-gray-100 last:border-0">
+                  <tr key={e.id} className="border-b border-line last:border-0">
                     <td className="whitespace-nowrap py-2 pr-4 text-gray-500">
                       {formatDateTime(e.created_at)}
                     </td>

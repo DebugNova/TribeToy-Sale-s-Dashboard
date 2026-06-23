@@ -50,9 +50,9 @@ export function ImportForm() {
 
   return (
     <div className="max-w-4xl space-y-6">
-      <section className="space-y-4 rounded-xl border border-gray-200 bg-white p-6">
+      <section className="space-y-4 rounded-2xl border border-line bg-white p-6 shadow-sm shadow-black/[0.03]">
         <div>
-          <label htmlFor="csv" className="mb-1 block text-sm font-medium text-gray-700">
+          <label htmlFor="csv" className="mb-1.5 block text-sm font-semibold text-[#574f47]">
             Amazon order report (.csv or tab-separated .txt)
           </label>
           <input
@@ -60,7 +60,7 @@ export function ImportForm() {
             type="file"
             accept=".csv,.txt,text/csv,text/plain"
             onChange={onFile}
-            className="block w-full text-sm text-gray-700 file:mr-4 file:rounded-lg file:border-0 file:bg-gray-900 file:px-4 file:py-2 file:text-sm file:font-medium file:text-white hover:file:bg-gray-800"
+            className="block w-full text-sm text-[#574f47] file:mr-4 file:cursor-pointer file:rounded-xl file:border-0 file:bg-brand-600 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white hover:file:bg-brand-700"
           />
           <p className="mt-2 text-xs text-gray-400">
             We map common Amazon columns (order-id, sku, quantity-purchased, item-price,
@@ -83,14 +83,14 @@ export function ImportForm() {
       </section>
 
       {orders.length > 0 && !summary && (
-        <section className="space-y-4 rounded-xl border border-gray-200 bg-white p-6">
-          <h2 className="text-sm font-semibold text-gray-900">
+        <section className="space-y-4 rounded-2xl border border-line bg-white p-6 shadow-sm shadow-black/[0.03]">
+          <h2 className="text-sm font-bold text-[#332f29]">
             Preview — {orders.length} order(s) from {fileName}
           </h2>
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm">
               <thead>
-                <tr className="border-b border-gray-200 text-xs uppercase tracking-wide text-gray-500">
+                <tr className="border-b border-line text-xs uppercase tracking-wide text-gray-500">
                   <th className="py-2 pr-4 font-medium">Amazon order id</th>
                   <th className="py-2 pr-4 font-medium">Customer</th>
                   <th className="py-2 pr-4 font-medium">City</th>
@@ -100,7 +100,7 @@ export function ImportForm() {
               </thead>
               <tbody>
                 {orders.slice(0, 50).map((o) => (
-                  <tr key={o.source_order_id} className="border-b border-gray-100 last:border-0">
+                  <tr key={o.source_order_id} className="border-b border-line last:border-0">
                     <td className="py-2 pr-4 font-mono text-xs text-gray-700">
                       {o.source_order_id}
                     </td>
@@ -123,7 +123,7 @@ export function ImportForm() {
             )}
           </div>
 
-          <div className="flex items-center gap-3 border-t border-gray-100 pt-4">
+          <div className="flex items-center gap-3 border-t border-line pt-4">
             <button
               type="button"
               onClick={onImport}
@@ -140,8 +140,8 @@ export function ImportForm() {
       )}
 
       {summary && (
-        <section className="space-y-4 rounded-xl border border-gray-200 bg-white p-6">
-          <h2 className="text-sm font-semibold text-gray-900">Import complete</h2>
+        <section className="space-y-4 rounded-2xl border border-line bg-white p-6 shadow-sm shadow-black/[0.03]">
+          <h2 className="text-sm font-bold text-[#332f29]">Import complete</h2>
           <div className="flex flex-wrap gap-4 text-sm">
             <span className="rounded-lg bg-green-50 px-3 py-1 font-medium text-green-700">
               {summary.created} created
@@ -168,7 +168,7 @@ export function ImportForm() {
             </ul>
           )}
 
-          <div className="flex items-center gap-3 border-t border-gray-100 pt-4">
+          <div className="flex items-center gap-3 border-t border-line pt-4">
             <button
               type="button"
               onClick={() => router.push("/orders")}

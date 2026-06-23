@@ -40,14 +40,16 @@ const compactINR = (n: number) =>
   }).format(n);
 
 const axisProps = {
-  tick: { fontSize: 11, fill: "#6b7280" },
-  stroke: "#e5e7eb",
+  tick: { fontSize: 11, fill: "#9a9084" },
+  stroke: "#e9dcc8",
 } as const;
+
+const GRID_STROKE = "#f3ebdd";
 
 function Empty() {
   return (
     <div
-      className="flex items-center justify-center text-sm text-gray-400"
+      className="flex items-center justify-center text-sm text-[#a89e90]"
       style={{ height: CHART_HEIGHT }}
     >
       No data for the selected filters.
@@ -60,14 +62,14 @@ export function RevenueTrendChart({ data }: { data: TrendPoint[] }) {
   return (
     <ResponsiveContainer width="100%" height={CHART_HEIGHT}>
       <BarChart data={data} margin={{ top: 8, right: 8, bottom: 0, left: 0 }}>
-        <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" vertical={false} />
+        <CartesianGrid strokeDasharray="3 3" stroke={GRID_STROKE} vertical={false} />
         <XAxis dataKey="day" tickFormatter={shortDay} {...axisProps} />
         <YAxis tickFormatter={compactINR} width={56} {...axisProps} />
         <Tooltip
           formatter={(value) => [formatINR(Number(value)), "Revenue"]}
           labelFormatter={(label) => shortDay(String(label))}
         />
-        <Bar dataKey="revenue" fill="#111827" radius={[4, 4, 0, 0]} maxBarSize={48} />
+        <Bar dataKey="revenue" fill="#54902a" radius={[6, 6, 0, 0]} maxBarSize={48} />
       </BarChart>
     </ResponsiveContainer>
   );
@@ -78,7 +80,7 @@ export function OrdersTrendChart({ data }: { data: TrendPoint[] }) {
   return (
     <ResponsiveContainer width="100%" height={CHART_HEIGHT}>
       <LineChart data={data} margin={{ top: 8, right: 8, bottom: 0, left: 0 }}>
-        <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" vertical={false} />
+        <CartesianGrid strokeDasharray="3 3" stroke={GRID_STROKE} vertical={false} />
         <XAxis dataKey="day" tickFormatter={shortDay} {...axisProps} />
         <YAxis allowDecimals={false} width={32} {...axisProps} />
         <Tooltip
@@ -88,9 +90,9 @@ export function OrdersTrendChart({ data }: { data: TrendPoint[] }) {
         <Line
           type="monotone"
           dataKey="orders"
-          stroke="#0891b2"
-          strokeWidth={2}
-          dot={{ r: 3 }}
+          stroke="#e34f8c"
+          strokeWidth={2.5}
+          dot={{ r: 3, fill: "#e34f8c" }}
           activeDot={{ r: 5 }}
         />
       </LineChart>
@@ -99,13 +101,13 @@ export function OrdersTrendChart({ data }: { data: TrendPoint[] }) {
 }
 
 const CHANNEL_COLORS = [
-  "#111827",
-  "#0891b2",
-  "#7c3aed",
-  "#d97706",
-  "#dc2626",
-  "#059669",
-  "#db2777",
+  "#54902a", // brand green
+  "#e34f8c", // blush
+  "#8fc846", // light leaf
+  "#f3a3c6", // light blush
+  "#6fad2e", // leaf
+  "#cf3576", // deep blush
+  "#aed975", // pale leaf
 ];
 
 export function ChannelSplitChart({ data }: { data: ChannelSlice[] }) {

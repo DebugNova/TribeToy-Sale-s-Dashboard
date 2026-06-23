@@ -9,7 +9,7 @@ import type {
 function Badge({ label, className }: { label: string; className: string }) {
   return (
     <span
-      className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${className}`}
+      className={`inline-flex items-center whitespace-nowrap rounded-full px-2.5 py-0.5 text-xs font-semibold ${className}`}
     >
       {label}
     </span>
@@ -65,7 +65,12 @@ export const CHANNEL_LABEL: Record<OrderChannel, string> = {
 };
 
 export function ChannelBadge({ channel }: { channel: OrderChannel }) {
-  return <Badge label={CHANNEL_LABEL[channel]} className="bg-gray-100 text-gray-700" />;
+  return (
+    <Badge
+      label={CHANNEL_LABEL[channel]}
+      className="bg-brand-50 text-brand-700 ring-1 ring-inset ring-brand-100"
+    />
+  );
 }
 
 const FULFILLMENT_LABEL: Record<FulfillmentState, string> = {

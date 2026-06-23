@@ -9,13 +9,15 @@ export function PagePlaceholder({
 }) {
   return (
     <div>
-      <h1 className="text-xl font-semibold text-gray-900">{title}</h1>
-      <p className="mt-1 text-sm text-gray-500">{description}</p>
+      <h1 className="text-2xl font-extrabold tracking-tight text-[#332f29]">
+        {title}
+      </h1>
+      <p className="mt-1 text-sm text-[#7a7066]">{description}</p>
 
-      <div className="mt-6 flex items-center justify-center rounded-xl border border-dashed border-gray-300 bg-white py-16">
+      <div className="mt-6 flex items-center justify-center rounded-2xl border border-dashed border-cream-300 bg-white py-16">
         <div className="text-center">
-          <p className="text-sm font-medium text-gray-700">Nothing here yet</p>
-          <p className="mt-1 text-xs text-gray-400">Coming in {phase}</p>
+          <p className="text-sm font-bold text-[#574f47]">Nothing here yet</p>
+          <p className="mt-1 text-xs text-[#a89e90]">Coming in {phase}</p>
         </div>
       </div>
     </div>

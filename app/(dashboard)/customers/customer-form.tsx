@@ -23,7 +23,7 @@ export function CustomerForm({ customer }: { customer?: Customer | null }) {
     <form action={formAction} className="max-w-2xl space-y-6">
       {customer && <input type="hidden" name="id" value={customer.id} />}
 
-      <fieldset className="space-y-4 rounded-xl border border-gray-200 bg-white p-6">
+      <fieldset className="space-y-4 rounded-xl border border-line bg-white p-6">
         <legend className="px-1 text-sm font-semibold text-gray-900">Contact</legend>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <TextField label="Name" name="name" defaultValue={customer?.name ?? ""} required />
@@ -53,7 +53,7 @@ export function CustomerForm({ customer }: { customer?: Customer | null }) {
         </div>
       </fieldset>
 
-      <fieldset className="space-y-4 rounded-xl border border-gray-200 bg-white p-6">
+      <fieldset className="space-y-4 rounded-xl border border-line bg-white p-6">
         <legend className="px-1 text-sm font-semibold text-gray-900">Address</legend>
         <TextField
           label="Address"
@@ -73,7 +73,7 @@ export function CustomerForm({ customer }: { customer?: Customer | null }) {
         </div>
       </fieldset>
 
-      <fieldset className="space-y-4 rounded-xl border border-gray-200 bg-white p-6">
+      <fieldset className="space-y-4 rounded-xl border border-line bg-white p-6">
         <legend className="px-1 text-sm font-semibold text-gray-900">Notes</legend>
         <TextAreaField
           label="Internal notes"

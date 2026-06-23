@@ -15,11 +15,13 @@ export function Panel({
   bodyClassName?: string;
 }) {
   return (
-    <section className="rounded-xl border border-gray-200 bg-white">
-      <div className="flex items-center justify-between gap-3 border-b border-gray-100 px-4 py-3">
-        <div>
-          <h2 className="text-sm font-semibold text-gray-900">{title}</h2>
-          {description && <p className="mt-0.5 text-xs text-gray-500">{description}</p>}
+    <section className="rounded-2xl border border-line bg-white shadow-sm shadow-black/[0.03]">
+      <div className="flex items-center justify-between gap-3 border-b border-line px-4 py-3">
+        <div className="min-w-0">
+          <h2 className="text-sm font-bold text-[#332f29]">{title}</h2>
+          {description && (
+            <p className="mt-0.5 text-xs text-[#9a9084]">{description}</p>
+          )}
         </div>
         {action && <div className="shrink-0">{action}</div>}
       </div>

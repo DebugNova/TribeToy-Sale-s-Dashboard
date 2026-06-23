@@ -33,7 +33,7 @@ const ACTION_LABEL: Record<string, string> = {
 };
 
 const primaryBtn =
-  "inline-flex items-center rounded-lg bg-gray-900 px-3 py-2 text-sm font-medium text-white transition hover:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-60";
+  "inline-flex items-center justify-center gap-1.5 rounded-xl bg-brand-600 px-3 py-2 text-sm font-semibold text-white shadow-sm shadow-brand-600/20 transition hover:bg-brand-700 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60";
 
 function todayIST(): string {
   // en-CA renders as YYYY-MM-DD, which is what <input type="date"> expects.
@@ -198,8 +198,8 @@ export function LabelPanel({
           </div>
 
           {/* AWB / courier / dispatch edit */}
-          <div className="rounded-lg border border-gray-200 bg-gray-50 p-4">
-            <h3 className="mb-3 text-xs font-semibold uppercase tracking-wide text-gray-500">
+          <div className="rounded-xl border border-line bg-cream-100/60 p-4">
+            <h3 className="mb-3 text-xs font-bold uppercase tracking-wide text-[#9a9084]">
               Courier &amp; tracking
             </h3>
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">

@@ -52,7 +52,7 @@ export function FilterBar({
     <form
       key={sp.toString()}
       onSubmit={onSubmit}
-      className="mb-6 grid grid-cols-2 gap-3 rounded-xl border border-gray-200 bg-white p-4 sm:grid-cols-3 lg:grid-cols-6"
+      className="mb-6 grid grid-cols-2 gap-3 rounded-xl border border-line bg-white p-4 sm:grid-cols-3 lg:grid-cols-6"
     >
       <label className="flex flex-col gap-1 text-xs font-medium text-gray-600">
         From

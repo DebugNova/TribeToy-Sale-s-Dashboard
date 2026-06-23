@@ -31,7 +31,7 @@ export default async function EditCustomerPage({
       {canWrite ? (
         <CustomerForm customer={customer} />
       ) : (
-        <dl className="grid max-w-xl grid-cols-3 gap-x-4 gap-y-3 rounded-xl border border-gray-200 bg-white p-5 text-sm">
+        <dl className="grid max-w-xl grid-cols-3 gap-x-4 gap-y-3 rounded-xl border border-line bg-white p-5 text-sm">
           <dt className="text-gray-500">Type</dt>
           <dd className="col-span-2 uppercase text-gray-900">{customer.type}</dd>
           <dt className="text-gray-500">Phone</dt>

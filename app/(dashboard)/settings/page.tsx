@@ -29,7 +29,7 @@ export default async function SettingsPage() {
         )}
       </div>
 
-      <div className="mt-10 border-t border-gray-200 pt-8">
+      <div className="mt-10 border-t border-line pt-8">
         <h2 className="text-lg font-semibold text-gray-900">Website intake (Phase 4)</h2>
         <p className="mt-1 text-sm text-gray-500">
           Auto-import orders from the custom website via the signed intake API.

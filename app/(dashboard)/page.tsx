@@ -136,19 +136,19 @@ export default async function DashboardPage({
       {/* Top SKUs */}
       <div className="mb-6">
         <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
-          <h2 className="text-sm font-semibold text-gray-900">Top SKUs</h2>
+          <h2 className="text-sm font-bold text-[#332f29]">Top SKUs</h2>
           <div className="flex items-center gap-3">
-            <div className="inline-flex overflow-hidden rounded-lg border border-gray-300 text-xs">
+            <div className="inline-flex overflow-hidden rounded-xl border border-line text-xs">
               {SKU_SORTS.map((s) => {
                 const active = s.key === skuSort;
                 return (
                   <Link
                     key={s.key}
                     href={`/?${filtersToQuery(filters, { skuSort: s.key })}`}
-                    className={`px-3 py-1.5 font-medium transition ${
+                    className={`px-3 py-1.5 font-semibold transition ${
                       active
-                        ? "bg-gray-900 text-white"
-                        : "bg-white text-gray-600 hover:bg-gray-100"
+                        ? "bg-brand-600 text-white"
+                        : "bg-white text-[#7a7066] hover:bg-brand-50 hover:text-brand-700"
                     }`}
                     scroll={false}
                   >
@@ -186,7 +186,7 @@ export default async function DashboardPage({
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         <div>
           <div className="mb-3 flex items-center justify-between gap-3">
-            <h2 className="text-sm font-semibold text-gray-900">Low-stock alerts</h2>
+            <h2 className="text-sm font-bold text-[#332f29]">Low-stock alerts</h2>
             <ExportCsvButton
               filename="low-stock.csv"
               headers={["SKU", "Product", "Category", "On hand", "Reserved", "Available", "Threshold"]}
@@ -211,7 +211,7 @@ export default async function DashboardPage({
 
         <div>
           <div className="mb-3 flex items-center justify-between gap-3">
-            <h2 className="text-sm font-semibold text-gray-900">Packing backlog</h2>
+            <h2 className="text-sm font-bold text-[#332f29]">Packing backlog</h2>
             <ExportCsvButton
               filename="packing-backlog.csv"
               headers={["Order #", "Status", "Channel", "Customer", "Total (INR)", "Age (days)", "Created"]}

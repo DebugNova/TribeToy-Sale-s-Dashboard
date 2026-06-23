@@ -5,6 +5,7 @@ import {
   updateSettings,
   type SettingsFormState,
 } from "./actions";
+import { inputClass } from "@/components/form";
 import type { Tables } from "@/lib/supabase/database.types";
 
 const initialState: SettingsFormState = { ok: false, message: "" };
@@ -29,7 +30,7 @@ function Field({
     <div>
       <label
         htmlFor={name}
-        className="mb-1 block text-sm font-medium text-gray-700"
+        className="mb-1.5 block text-sm font-semibold text-[#574f47]"
       >
         {label}
       </label>
@@ -37,7 +38,7 @@ function Field({
         id={name}
         name={name}
         defaultValue={defaultValue}
-        className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 outline-none focus:border-gray-900 focus:ring-1 focus:ring-gray-900"
+        className={inputClass}
         {...rest}
       />
     </div>
@@ -52,8 +53,8 @@ export function SettingsForm({ settings }: { settings: Tables<"settings"> }) {
 
   return (
     <form action={formAction} className="max-w-2xl space-y-6">
-      <fieldset className="space-y-4 rounded-xl border border-gray-200 bg-white p-6">
-        <legend className="px-1 text-sm font-semibold text-gray-900">
+      <fieldset className="space-y-4 rounded-2xl border border-line bg-white p-6 shadow-sm shadow-black/[0.03]">
+        <legend className="px-1 text-sm font-bold text-[#332f29]">
           Label “FROM” block (sender)
         </legend>
 
@@ -98,14 +99,14 @@ export function SettingsForm({ settings }: { settings: Tables<"settings"> }) {
         />
       </fieldset>
 
-      <fieldset className="space-y-4 rounded-xl border border-gray-200 bg-white p-6">
-        <legend className="px-1 text-sm font-semibold text-gray-900">
+      <fieldset className="space-y-4 rounded-2xl border border-line bg-white p-6 shadow-sm shadow-black/[0.03]">
+        <legend className="px-1 text-sm font-bold text-[#332f29]">
           Defaults
         </legend>
         <div>
           <label
             htmlFor="default_courier"
-            className="mb-1 block text-sm font-medium text-gray-700"
+            className="mb-1.5 block text-sm font-semibold text-[#574f47]"
           >
             Default courier
           </label>
@@ -113,7 +114,7 @@ export function SettingsForm({ settings }: { settings: Tables<"settings"> }) {
             id="default_courier"
             name="default_courier"
             defaultValue={settings.default_courier}
-            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 outline-none focus:border-gray-900 focus:ring-1 focus:ring-gray-900"
+            className={inputClass}
           >
             {COURIERS.map((c) => (
               <option key={c.value} value={c.value}>
@@ -128,14 +129,14 @@ export function SettingsForm({ settings }: { settings: Tables<"settings"> }) {
         <button
           type="submit"
           disabled={pending}
-          className="rounded-lg bg-gray-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-60"
+          className="inline-flex items-center justify-center rounded-xl bg-brand-600 px-4 py-2 text-sm font-semibold text-white shadow-sm shadow-brand-600/20 transition hover:bg-brand-700 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60"
         >
           {pending ? "Saving…" : "Save settings"}
         </button>
         {state.message && (
           <span
-            className={`text-sm ${
-              state.ok ? "text-green-700" : "text-red-700"
+            className={`text-sm font-medium ${
+              state.ok ? "text-brand-700" : "text-red-600"
             }`}
           >
             {state.message}

@@ -254,7 +254,7 @@ export function OrderForm({
   return (
     <form onSubmit={handleSubmit} className="max-w-4xl space-y-6">
       {/* Channel */}
-      <fieldset className="space-y-4 rounded-xl border border-gray-200 bg-white p-6">
+      <fieldset className="space-y-4 rounded-xl border border-line bg-white p-6">
         <legend className="px-1 text-sm font-semibold text-gray-900">Channel</legend>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div>
@@ -296,7 +296,7 @@ export function OrderForm({
       </fieldset>
 
       {/* Customer */}
-      <fieldset className="space-y-4 rounded-xl border border-gray-200 bg-white p-6">
+      <fieldset className="space-y-4 rounded-xl border border-line bg-white p-6">
         <legend className="px-1 text-sm font-semibold text-gray-900">Customer</legend>
         <div className="flex gap-4 text-sm">
           <label className="flex items-center gap-2">
@@ -415,7 +415,7 @@ export function OrderForm({
       </fieldset>
 
       {/* Items */}
-      <fieldset className="space-y-3 rounded-xl border border-gray-200 bg-white p-6">
+      <fieldset className="space-y-3 rounded-xl border border-line bg-white p-6">
         <legend className="px-1 text-sm font-semibold text-gray-900">Items</legend>
         <div className="space-y-3">
           {items.map((r) => {
@@ -426,7 +426,7 @@ export function OrderForm({
             return (
               <div
                 key={r.key}
-                className="grid grid-cols-1 gap-3 rounded-lg border border-gray-100 bg-gray-50/60 p-3 sm:grid-cols-12"
+                className="grid grid-cols-1 gap-3 rounded-lg border border-line bg-gray-50/60 p-3 sm:grid-cols-12"
               >
                 <div className="sm:col-span-4">
                   <label className="mb-1 block text-xs font-medium text-gray-500">Product</label>
@@ -493,7 +493,7 @@ export function OrderForm({
                     />
                   </div>
                 </div>
-                <div className="sm:col-span-12 flex items-center justify-between border-t border-gray-100 pt-2 text-sm">
+                <div className="sm:col-span-12 flex items-center justify-between border-t border-line pt-2 text-sm">
                   <span className="text-gray-500">
                     Line total: <span className="font-medium text-gray-900">{formatINR(lineTotal)}</span>
                   </span>
@@ -520,7 +520,7 @@ export function OrderForm({
       </fieldset>
 
       {/* Payment + totals */}
-      <fieldset className="space-y-4 rounded-xl border border-gray-200 bg-white p-6">
+      <fieldset className="space-y-4 rounded-xl border border-line bg-white p-6">
         <legend className="px-1 text-sm font-semibold text-gray-900">Payment & totals</legend>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div>
@@ -584,7 +584,7 @@ export function OrderForm({
           />
         </div>
 
-        <div className="space-y-1 border-t border-gray-100 pt-4 text-sm">
+        <div className="space-y-1 border-t border-line pt-4 text-sm">
           <div className="flex justify-between text-gray-600">
             <span>Subtotal</span>
             <span>{formatINR(totals.subtotal)}</span>

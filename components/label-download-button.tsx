@@ -36,7 +36,7 @@ export function LabelDownloadButton({
   }
 
   if (!hasLabel) {
-    return <span className="text-xs text-gray-400">No label</span>;
+    return <span className="text-xs text-[#a89e90]">No label</span>;
   }
 
   return (
@@ -47,7 +47,7 @@ export function LabelDownloadButton({
         disabled={pending}
         className={
           className ??
-          "inline-flex items-center rounded-lg bg-gray-900 px-3 py-2 text-sm font-medium text-white transition hover:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-60"
+          "inline-flex items-center justify-center gap-1.5 rounded-xl bg-brand-600 px-3 py-2 text-sm font-semibold text-white shadow-sm shadow-brand-600/20 transition hover:bg-brand-700 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60"
         }
       >
         {pending ? "Preparing…" : children}

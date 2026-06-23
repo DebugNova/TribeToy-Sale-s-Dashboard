@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { signOut } from "@/lib/auth/actions";
-import { NavLinks, type NavItem } from "@/components/nav-links";
+import { type NavItem } from "@/components/nav-links";
+import { AppShell } from "@/components/app-shell";
 import { roleCan, ROLE_LABEL, type Role } from "@/lib/auth/roles";
 import { getAlertCount } from "@/lib/alerts/queries";
 
@@ -49,40 +49,12 @@ export default async function DashboardLayout({
   ];
 
   return (
-    <div className="flex min-h-screen bg-gray-50 text-gray-900">
-      <aside className="flex w-60 shrink-0 flex-col border-r border-gray-200 bg-white">
-        <div className="border-b border-gray-200 px-5 py-4">
-          <p className="text-lg font-semibold">TribeToy</p>
-          <p className="text-xs text-gray-500">Commerce Dashboard</p>
-        </div>
-        <div className="flex-1 overflow-y-auto p-3">
-          <NavLinks items={items} />
-        </div>
-      </aside>
-
-      <div className="flex min-w-0 flex-1 flex-col">
-        <header className="flex items-center justify-between border-b border-gray-200 bg-white px-6 py-3">
-          <div className="text-sm text-gray-500">
-            Signed in as{" "}
-            <span className="font-medium text-gray-900">{displayName}</span>
-            {role && (
-              <span className="ml-2 rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-600">
-                {ROLE_LABEL[role]}
-              </span>
-            )}
-          </div>
-          <form action={signOut}>
-            <button
-              type="submit"
-              className="rounded-lg border border-gray-300 px-3 py-1.5 text-sm font-medium text-gray-700 transition hover:bg-gray-100"
-            >
-              Sign out
-            </button>
-          </form>
-        </header>
-
-        <main className="flex-1 overflow-y-auto p-6">{children}</main>
-      </div>
-    </div>
+    <AppShell
+      items={items}
+      displayName={displayName}
+      roleLabel={role ? ROLE_LABEL[role] : null}
+    >
+      {children}
+    </AppShell>
   );
 }

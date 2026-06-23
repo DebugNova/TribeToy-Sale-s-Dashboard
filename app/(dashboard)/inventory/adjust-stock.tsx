@@ -29,14 +29,14 @@ function AdjustModal({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 p-4"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-brand-900/40 p-4 backdrop-blur-[2px]"
       onClick={onClose}
     >
       <div
-        className="w-full max-w-md rounded-xl border border-gray-200 bg-white p-6 shadow-lg"
+        className="w-full max-w-md rounded-2xl border border-line bg-white p-6 shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
-        <h2 className="text-base font-semibold text-gray-900">Adjust stock</h2>
+        <h2 className="text-base font-bold text-[#332f29]">Adjust stock</h2>
         <p className="mt-0.5 text-sm text-gray-500">{productName}</p>
         <p className="mt-2 text-xs text-gray-400">
           On hand {current.on_hand} · Damaged {current.damaged} · Threshold{" "}
@@ -130,7 +130,7 @@ export function AdjustStockButton({
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="text-sm font-medium text-gray-900 hover:underline"
+        className="text-sm font-semibold text-brand-700 hover:text-brand-800 hover:underline"
       >
         Adjust
       </button>

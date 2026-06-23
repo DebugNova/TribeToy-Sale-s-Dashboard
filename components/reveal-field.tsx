@@ -21,15 +21,15 @@ export function RevealField({
   const [pending, start] = useTransition();
 
   if (value !== null) {
-    return <span className="font-mono text-gray-900">{value}</span>;
+    return <span className="font-mono text-[#3a352f]">{value}</span>;
   }
 
   // Nothing to reveal (no stored value) — just show the placeholder.
-  if (masked === "—") return <span className="text-gray-400">—</span>;
+  if (masked === "—") return <span className="text-[#a89e90]">—</span>;
 
   return (
     <span className="inline-flex items-center gap-2">
-      <span className="font-mono text-gray-700">{masked}</span>
+      <span className="font-mono text-[#574f47]">{masked}</span>
       <button
         type="button"
         disabled={pending}
@@ -43,7 +43,7 @@ export function RevealField({
             }
           })
         }
-        className="text-xs font-medium text-gray-500 underline decoration-dotted hover:text-gray-900 disabled:opacity-50"
+        className="text-xs font-semibold text-brand-600 underline decoration-dotted underline-offset-2 hover:text-brand-700 disabled:opacity-50"
       >
         {pending ? "…" : error ? "Retry" : "Reveal"}
       </button>

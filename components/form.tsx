@@ -5,7 +5,7 @@
 import type { InputHTMLAttributes, SelectHTMLAttributes, TextareaHTMLAttributes } from "react";
 
 export const inputClass =
-  "w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 outline-none focus:border-gray-900 focus:ring-1 focus:ring-gray-900 disabled:bg-gray-50 disabled:text-gray-500";
+  "w-full rounded-xl border border-line bg-white px-3 py-2 text-sm text-[#3a352f] outline-none transition placeholder:text-[#b3a99b] focus:border-brand-400 focus:ring-2 focus:ring-brand-200 disabled:bg-cream-100 disabled:text-[#9a9084]";
 
 export function FieldLabel({
   htmlFor,
@@ -17,9 +17,12 @@ export function FieldLabel({
   hint?: string;
 }) {
   return (
-    <label htmlFor={htmlFor} className="mb-1 block text-sm font-medium text-gray-700">
+    <label
+      htmlFor={htmlFor}
+      className="mb-1.5 block text-sm font-semibold text-[#574f47]"
+    >
       {children}
-      {hint && <span className="ml-1 font-normal text-gray-400">{hint}</span>}
+      {hint && <span className="ml-1 font-normal text-[#a89e90]">{hint}</span>}
     </label>
   );
 }
@@ -78,7 +81,9 @@ export function TextAreaField({
 export function FormMessage({ ok, message }: { ok: boolean; message: string }) {
   if (!message) return null;
   return (
-    <span className={`text-sm ${ok ? "text-green-700" : "text-red-700"}`}>{message}</span>
+    <span className={`text-sm font-medium ${ok ? "text-brand-700" : "text-red-600"}`}>
+      {message}
+    </span>
   );
 }
 
@@ -93,7 +98,7 @@ export function SubmitButton({
     <button
       type="submit"
       disabled={pending}
-      className="rounded-lg bg-gray-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-60"
+      className="inline-flex items-center justify-center rounded-xl bg-brand-600 px-4 py-2 text-sm font-semibold text-white shadow-sm shadow-brand-600/20 transition hover:bg-brand-700 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60"
     >
       {children}
     </button>

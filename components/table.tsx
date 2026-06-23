@@ -2,8 +2,8 @@
 // just supplies the card, header row, dividers and an empty state.
 
 export const thClass =
-  "px-4 py-2.5 text-left text-xs font-semibold uppercase tracking-wide text-gray-500";
-export const tdClass = "px-4 py-3 text-sm text-gray-700 align-middle";
+  "px-4 py-3 text-left text-[11px] font-bold uppercase tracking-wide text-[#9a9084] whitespace-nowrap";
+export const tdClass = "px-4 py-3 text-sm text-[#574f47] align-middle";
 
 export function DataTable({
   columns,
@@ -17,9 +17,9 @@ export function DataTable({
   children: React.ReactNode;
 }) {
   return (
-    <div className="overflow-x-auto rounded-xl border border-gray-200 bg-white">
+    <div className="overflow-x-auto rounded-2xl border border-line bg-white shadow-sm shadow-black/[0.03]">
       <table className="w-full border-collapse">
-        <thead className="border-b border-gray-200 bg-gray-50">
+        <thead className="border-b border-line bg-cream-100/70">
           <tr>
             {columns.map((c) => (
               <th key={c} className={thClass}>
@@ -28,12 +28,12 @@ export function DataTable({
             ))}
           </tr>
         </thead>
-        <tbody className="divide-y divide-gray-100">
+        <tbody className="divide-y divide-line/70">
           {isEmpty ? (
             <tr>
               <td
                 colSpan={columns.length}
-                className="px-4 py-12 text-center text-sm text-gray-400"
+                className="px-4 py-14 text-center text-sm text-[#a89e90]"
               >
                 {emptyMessage}
               </td>

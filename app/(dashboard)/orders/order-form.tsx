@@ -4,7 +4,8 @@ import { useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { createOrder } from "@/lib/channels/normalizeOrder";
-import { inputClass } from "@/components/form";
+import { inputClass, FieldLabel } from "@/components/form";
+import { Select } from "@/components/select";
 import { buttonPrimaryClass, buttonSecondaryClass } from "@/components/page-header";
 import { formatINR, round2 } from "@/lib/money";
 import type {
@@ -63,6 +64,13 @@ type ItemRow = {
   unitPrice: string;
   discount: string;
 };
+
+// Branded section card + compact item-field label, matching settings-form / FieldLabel so the
+// whole page reads as one design system (rounded card, soft shadow, mobile-first padding).
+const sectionClass =
+  "space-y-4 rounded-2xl border border-line bg-white p-4 shadow-sm shadow-black/[0.03] sm:p-6";
+const legendClass = "px-1 text-sm font-bold text-[#332f29]";
+const itemLabelClass = "mb-1 block text-xs font-semibold text-[#7a7066]";
 
 let rowSeq = 0;
 const blankRow = (): ItemRow => ({
@@ -252,38 +260,25 @@ export function OrderForm({
   }
 
   return (
-    <form onSubmit={handleSubmit} className="max-w-4xl space-y-6">
+    <form onSubmit={handleSubmit} className="max-w-4xl space-y-5 sm:space-y-6">
       {/* Channel */}
-      <fieldset className="space-y-4 rounded-xl border border-line bg-white p-6">
-        <legend className="px-1 text-sm font-semibold text-gray-900">Channel</legend>
+      <fieldset className={sectionClass}>
+        <legend className={legendClass}>Channel</legend>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div>
-            <label htmlFor="channel" className="mb-1 block text-sm font-medium text-gray-700">
-              Sales channel
-            </label>
-            <select
+            <FieldLabel htmlFor="channel">Sales channel</FieldLabel>
+            <Select
               id="channel"
               value={channel}
-              onChange={(e) => setChannel(e.target.value as OrderChannel)}
-              className={inputClass}
-            >
-              {CHANNELS.map((c) => (
-                <option key={c.value} value={c.value}>
-                  {c.label}
-                </option>
-              ))}
-            </select>
+              onValueChange={(v) => setChannel(v as OrderChannel)}
+              options={CHANNELS.map((c) => ({ value: c.value, label: c.label }))}
+              ariaLabel="Sales channel"
+            />
           </div>
           <div>
-            <label
-              htmlFor="source_order_id"
-              className="mb-1 block text-sm font-medium text-gray-700"
-            >
-              Source order ID{" "}
-              <span className="font-normal text-gray-400">
-                (e.g. Amazon order #, optional)
-              </span>
-            </label>
+            <FieldLabel htmlFor="source_order_id" hint="(e.g. Amazon order #, optional)">
+              Source order ID
+            </FieldLabel>
             <input
               id="source_order_id"
               value={sourceOrderId}
@@ -296,72 +291,88 @@ export function OrderForm({
       </fieldset>
 
       {/* Customer */}
-      <fieldset className="space-y-4 rounded-xl border border-line bg-white p-6">
-        <legend className="px-1 text-sm font-semibold text-gray-900">Customer</legend>
-        <div className="flex gap-4 text-sm">
-          <label className="flex items-center gap-2">
-            <input
-              type="radio"
-              name="customerMode"
-              checked={customerMode === "existing"}
-              onChange={() => setCustomerMode("existing")}
-              disabled={customers.length === 0}
-            />
+      <fieldset className={sectionClass}>
+        <legend className={legendClass}>Customer</legend>
+
+        {/* Branded segmented toggle (replaces native radios) */}
+        <div
+          role="radiogroup"
+          aria-label="Customer source"
+          className="inline-flex w-full max-w-xs gap-1 rounded-xl border border-line bg-cream-100 p-1"
+        >
+          <button
+            type="button"
+            role="radio"
+            aria-checked={customerMode === "existing"}
+            onClick={() => setCustomerMode("existing")}
+            disabled={customers.length === 0}
+            className={`flex-1 rounded-lg px-3 py-1.5 text-sm font-semibold transition ${
+              customerMode === "existing"
+                ? "bg-white text-brand-700 shadow-sm"
+                : "text-[#7a7066] hover:text-[#3a352f] disabled:cursor-not-allowed disabled:text-[#c4bbae] disabled:hover:text-[#c4bbae]"
+            }`}
+          >
             Existing customer
-          </label>
-          <label className="flex items-center gap-2">
-            <input
-              type="radio"
-              name="customerMode"
-              checked={customerMode === "new"}
-              onChange={() => setCustomerMode("new")}
-            />
+          </button>
+          <button
+            type="button"
+            role="radio"
+            aria-checked={customerMode === "new"}
+            onClick={() => setCustomerMode("new")}
+            className={`flex-1 rounded-lg px-3 py-1.5 text-sm font-semibold transition ${
+              customerMode === "new"
+                ? "bg-white text-brand-700 shadow-sm"
+                : "text-[#7a7066] hover:text-[#3a352f]"
+            }`}
+          >
             New customer
-          </label>
+          </button>
         </div>
 
         {customerMode === "existing" ? (
           <div>
-            <label htmlFor="customer" className="mb-1 block text-sm font-medium text-gray-700">
-              Select customer
-            </label>
-            <select
+            <FieldLabel htmlFor="customer">Select customer</FieldLabel>
+            <Select
               id="customer"
               value={selectedCustomerId}
-              onChange={(e) => pickCustomer(e.target.value)}
-              className={inputClass}
-            >
-              <option value="">— choose —</option>
-              {customers.map((c) => (
-                <option key={c.id} value={c.id}>
-                  {c.name}
-                  {c.phone ? ` · ${c.phone}` : ""}
-                  {c.city ? ` · ${c.city}` : ""}
-                </option>
-              ))}
-            </select>
-            <p className="mt-1 text-xs text-gray-400">
+              onValueChange={(v) => pickCustomer(v)}
+              searchable
+              placeholder="— choose —"
+              ariaLabel="Select customer"
+              options={[
+                { value: "", label: "— choose —" },
+                ...customers.map((c) => ({
+                  value: c.id,
+                  label: c.name,
+                  hint: [c.phone, c.city].filter(Boolean).join(" · ") || undefined,
+                })),
+              ]}
+            />
+            <p className="mt-1.5 text-xs text-[#a89e90]">
               Ship-to below is prefilled from the customer; edit it to ship elsewhere.
             </p>
           </div>
         ) : (
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div>
-              <label className="mb-1 block text-sm font-medium text-gray-700">Type</label>
-              <select
+              <FieldLabel htmlFor="cust-type">Type</FieldLabel>
+              <Select
+                id="cust-type"
                 value={custType}
-                onChange={(e) => setCustType(e.target.value)}
-                className={inputClass}
-              >
-                <option value="b2c">B2C (consumer)</option>
-                <option value="b2b">B2B (dealer)</option>
-              </select>
+                onValueChange={setCustType}
+                ariaLabel="Customer type"
+                options={[
+                  { value: "b2c", label: "B2C (consumer)" },
+                  { value: "b2b", label: "B2B (dealer)" },
+                ]}
+              />
             </div>
             <div>
-              <label className="mb-1 block text-sm font-medium text-gray-700">
-                Email <span className="font-normal text-gray-400">(optional)</span>
-              </label>
+              <FieldLabel htmlFor="cust-email" hint="(optional)">
+                Email
+              </FieldLabel>
               <input
+                id="cust-email"
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -369,10 +380,11 @@ export function OrderForm({
               />
             </div>
             <div>
-              <label className="mb-1 block text-sm font-medium text-gray-700">
-                GSTIN <span className="font-normal text-gray-400">(B2B, optional)</span>
-              </label>
+              <FieldLabel htmlFor="cust-gstin" hint="(B2B, optional)">
+                GSTIN
+              </FieldLabel>
               <input
+                id="cust-gstin"
                 value={gstin}
                 onChange={(e) => setGstin(e.target.value)}
                 className={inputClass}
@@ -384,41 +396,41 @@ export function OrderForm({
         {/* Ship-to (shared) */}
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">
+            <FieldLabel htmlFor="ship-name">
               Name <span className="text-red-600">*</span>
-            </label>
-            <input value={name} onChange={(e) => setName(e.target.value)} className={inputClass} required />
+            </FieldLabel>
+            <input id="ship-name" value={name} onChange={(e) => setName(e.target.value)} className={inputClass} required />
           </div>
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">Phone</label>
-            <input value={phone} onChange={(e) => setPhone(e.target.value)} className={inputClass} />
+            <FieldLabel htmlFor="ship-phone">Phone</FieldLabel>
+            <input id="ship-phone" value={phone} onChange={(e) => setPhone(e.target.value)} className={inputClass} inputMode="tel" />
           </div>
         </div>
         <div>
-          <label className="mb-1 block text-sm font-medium text-gray-700">Address</label>
-          <input value={address} onChange={(e) => setAddress(e.target.value)} className={inputClass} />
+          <FieldLabel htmlFor="ship-address">Address</FieldLabel>
+          <input id="ship-address" value={address} onChange={(e) => setAddress(e.target.value)} className={inputClass} />
         </div>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">City</label>
-            <input value={city} onChange={(e) => setCity(e.target.value)} className={inputClass} />
+            <FieldLabel htmlFor="ship-city">City</FieldLabel>
+            <input id="ship-city" value={city} onChange={(e) => setCity(e.target.value)} className={inputClass} />
           </div>
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">State</label>
-            <input value={stateName} onChange={(e) => setStateName(e.target.value)} className={inputClass} />
+            <FieldLabel htmlFor="ship-state">State</FieldLabel>
+            <input id="ship-state" value={stateName} onChange={(e) => setStateName(e.target.value)} className={inputClass} />
           </div>
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">Pincode</label>
-            <input value={pincode} onChange={(e) => setPincode(e.target.value)} className={inputClass} inputMode="numeric" />
+            <FieldLabel htmlFor="ship-pincode">Pincode</FieldLabel>
+            <input id="ship-pincode" value={pincode} onChange={(e) => setPincode(e.target.value)} className={inputClass} inputMode="numeric" />
           </div>
         </div>
       </fieldset>
 
       {/* Items */}
-      <fieldset className="space-y-3 rounded-xl border border-line bg-white p-6">
-        <legend className="px-1 text-sm font-semibold text-gray-900">Items</legend>
+      <fieldset className={sectionClass}>
+        <legend className={legendClass}>Items</legend>
         <div className="space-y-3">
-          {items.map((r) => {
+          {items.map((r, i) => {
             const qty = Number(r.qty) || 0;
             const price = Number(r.unitPrice) || 0;
             const disc = Number(r.discount) || 0;
@@ -426,64 +438,83 @@ export function OrderForm({
             return (
               <div
                 key={r.key}
-                className="grid grid-cols-1 gap-3 rounded-lg border border-line bg-gray-50/60 p-3 sm:grid-cols-12"
+                className="rounded-xl border border-line bg-cream-50/70 p-3 sm:p-4"
               >
-                <div className="sm:col-span-4">
-                  <label className="mb-1 block text-xs font-medium text-gray-500">Product</label>
-                  <select
-                    value={r.productId}
-                    onChange={(e) => onPickProduct(r.key, e.target.value)}
-                    className={inputClass}
+                <div className="mb-3 flex items-center justify-between gap-2">
+                  <span className="text-xs font-bold uppercase tracking-wide text-[#9a9084]">
+                    Item {i + 1}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => setItems((rows) => rows.filter((x) => x.key !== r.key))}
+                    className="inline-flex items-center gap-1 rounded-lg px-2 py-1 text-xs font-semibold text-red-600 transition hover:bg-red-50 disabled:cursor-not-allowed disabled:text-[#c4bbae] disabled:hover:bg-transparent"
+                    disabled={items.length === 1}
                   >
-                    <option value="">— custom line —</option>
-                    {products.map((p) => (
-                      <option key={p.id} value={p.id}>
-                        {p.sku} · {p.name}
-                      </option>
-                    ))}
-                  </select>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                      <path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" />
+                    </svg>
+                    Remove
+                  </button>
                 </div>
-                <div className="sm:col-span-3">
-                  <label className="mb-1 block text-xs font-medium text-gray-500">
-                    Item name
-                  </label>
-                  <input
-                    value={r.name}
-                    onChange={(e) => updateItem(r.key, { name: e.target.value })}
-                    className={inputClass}
-                    placeholder="Item name"
-                  />
-                </div>
-                <div className="sm:col-span-1">
-                  <label className="mb-1 block text-xs font-medium text-gray-500">Qty</label>
-                  <input
-                    type="number"
-                    min="1"
-                    step="1"
-                    value={r.qty}
-                    onChange={(e) => updateItem(r.key, { qty: e.target.value })}
-                    className={inputClass}
-                  />
-                </div>
-                <div className="sm:col-span-2">
-                  <label className="mb-1 block text-xs font-medium text-gray-500">
-                    Unit price
-                  </label>
-                  <input
-                    type="number"
-                    min="0"
-                    step="0.01"
-                    value={r.unitPrice}
-                    onChange={(e) => updateItem(r.key, { unitPrice: e.target.value })}
-                    className={inputClass}
-                  />
-                </div>
-                <div className="sm:col-span-2 flex items-end justify-between gap-2">
-                  <div className="grow">
-                    <label className="mb-1 block text-xs font-medium text-gray-500">
-                      Discount
-                    </label>
+
+                <div className="grid grid-cols-1 gap-3 sm:grid-cols-12">
+                  <div className="sm:col-span-7">
+                    <label htmlFor={`item-${r.key}-product`} className={itemLabelClass}>Product</label>
+                    <Select
+                      id={`item-${r.key}-product`}
+                      value={r.productId}
+                      onValueChange={(v) => onPickProduct(r.key, v)}
+                      searchable
+                      placeholder="— custom line —"
+                      ariaLabel="Product"
+                      options={[
+                        { value: "", label: "— custom line —" },
+                        ...products.map((p) => ({ value: p.id, label: `${p.sku} · ${p.name}` })),
+                      ]}
+                    />
+                  </div>
+                  <div className="sm:col-span-5">
+                    <label htmlFor={`item-${r.key}-name`} className={itemLabelClass}>Item name</label>
                     <input
+                      id={`item-${r.key}-name`}
+                      value={r.name}
+                      onChange={(e) => updateItem(r.key, { name: e.target.value })}
+                      className={inputClass}
+                      placeholder="Custom item name"
+                    />
+                  </div>
+                </div>
+
+                <div className="mt-3 grid grid-cols-3 gap-3">
+                  <div>
+                    <label htmlFor={`item-${r.key}-qty`} className={itemLabelClass}>Qty</label>
+                    <input
+                      id={`item-${r.key}-qty`}
+                      type="number"
+                      min="1"
+                      step="1"
+                      value={r.qty}
+                      onChange={(e) => updateItem(r.key, { qty: e.target.value })}
+                      className={inputClass}
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor={`item-${r.key}-price`} className={itemLabelClass}>Unit price (₹)</label>
+                    <input
+                      id={`item-${r.key}-price`}
+                      type="number"
+                      min="0"
+                      step="0.01"
+                      value={r.unitPrice}
+                      onChange={(e) => updateItem(r.key, { unitPrice: e.target.value })}
+                      className={inputClass}
+                      placeholder="0.00"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor={`item-${r.key}-discount`} className={itemLabelClass}>Discount (₹)</label>
+                    <input
+                      id={`item-${r.key}-discount`}
                       type="number"
                       min="0"
                       step="0.01"
@@ -493,18 +524,10 @@ export function OrderForm({
                     />
                   </div>
                 </div>
-                <div className="sm:col-span-12 flex items-center justify-between border-t border-line pt-2 text-sm">
-                  <span className="text-gray-500">
-                    Line total: <span className="font-medium text-gray-900">{formatINR(lineTotal)}</span>
-                  </span>
-                  <button
-                    type="button"
-                    onClick={() => setItems((rows) => rows.filter((x) => x.key !== r.key))}
-                    className="text-sm font-medium text-red-600 hover:underline disabled:text-gray-300"
-                    disabled={items.length === 1}
-                  >
-                    Remove
-                  </button>
+
+                <div className="mt-3 flex items-center justify-end gap-2 border-t border-line pt-3 text-sm">
+                  <span className="text-[#7a7066]">Line total</span>
+                  <span className="font-semibold text-[#332f29]">{formatINR(lineTotal)}</span>
                 </div>
               </div>
             );
@@ -513,47 +536,40 @@ export function OrderForm({
         <button
           type="button"
           onClick={() => setItems((rows) => [...rows, blankRow()])}
-          className={buttonSecondaryClass}
+          className={`${buttonSecondaryClass} w-full sm:w-auto`}
         >
           + Add item
         </button>
       </fieldset>
 
       {/* Payment + totals */}
-      <fieldset className="space-y-4 rounded-xl border border-line bg-white p-6">
-        <legend className="px-1 text-sm font-semibold text-gray-900">Payment & totals</legend>
+      <fieldset className={sectionClass}>
+        <legend className={legendClass}>Payment &amp; totals</legend>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">Payment type</label>
-            <select
+            <FieldLabel htmlFor="payment-type">Payment type</FieldLabel>
+            <Select
+              id="payment-type"
               value={paymentType}
-              onChange={(e) => setPaymentType(e.target.value as PaymentType)}
-              className={inputClass}
-            >
-              {PAYMENT_TYPES.map((p) => (
-                <option key={p.value} value={p.value}>
-                  {p.label}
-                </option>
-              ))}
-            </select>
+              onValueChange={(v) => setPaymentType(v as PaymentType)}
+              options={PAYMENT_TYPES.map((p) => ({ value: p.value, label: p.label }))}
+              ariaLabel="Payment type"
+            />
           </div>
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">Payment status</label>
-            <select
+            <FieldLabel htmlFor="payment-status">Payment status</FieldLabel>
+            <Select
+              id="payment-status"
               value={paymentStatus}
-              onChange={(e) => setPaymentStatus(e.target.value as PaymentStatus)}
-              className={inputClass}
-            >
-              {PAYMENT_STATUSES.map((p) => (
-                <option key={p.value} value={p.value}>
-                  {p.label}
-                </option>
-              ))}
-            </select>
+              onValueChange={(v) => setPaymentStatus(v as PaymentStatus)}
+              options={PAYMENT_STATUSES.map((p) => ({ value: p.value, label: p.label }))}
+              ariaLabel="Payment status"
+            />
           </div>
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">Shipping charge</label>
+            <FieldLabel htmlFor="shipping">Shipping charge (₹)</FieldLabel>
             <input
+              id="shipping"
               type="number"
               min="0"
               step="0.01"
@@ -563,8 +579,9 @@ export function OrderForm({
             />
           </div>
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">Order discount</label>
+            <FieldLabel htmlFor="order-discount">Order discount (₹)</FieldLabel>
             <input
+              id="order-discount"
               type="number"
               min="0"
               step="0.01"
@@ -575,8 +592,9 @@ export function OrderForm({
           </div>
         </div>
         <div>
-          <label className="mb-1 block text-sm font-medium text-gray-700">Notes</label>
+          <FieldLabel htmlFor="notes">Notes</FieldLabel>
           <textarea
+            id="notes"
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
             rows={2}
@@ -584,31 +602,34 @@ export function OrderForm({
           />
         </div>
 
-        <div className="space-y-1 border-t border-line pt-4 text-sm">
-          <div className="flex justify-between text-gray-600">
-            <span>Subtotal</span>
-            <span>{formatINR(totals.subtotal)}</span>
+        {/* Highlighted order summary */}
+        <dl className="space-y-1.5 rounded-xl border border-line bg-cream-50/70 p-4 text-sm">
+          <div className="flex justify-between text-[#7a7066]">
+            <dt>Subtotal</dt>
+            <dd className="font-medium text-[#3a352f]">{formatINR(totals.subtotal)}</dd>
           </div>
-          <div className="flex justify-between text-gray-600">
-            <span>Discount</span>
-            <span>−{formatINR(totals.discountTotal)}</span>
+          <div className="flex justify-between text-[#7a7066]">
+            <dt>Discount</dt>
+            <dd className="font-medium text-[#3a352f]">−{formatINR(totals.discountTotal)}</dd>
           </div>
-          <div className="flex justify-between text-gray-600">
-            <span>Shipping</span>
-            <span>{formatINR(totals.ship)}</span>
+          <div className="flex justify-between text-[#7a7066]">
+            <dt>Shipping</dt>
+            <dd className="font-medium text-[#3a352f]">{formatINR(totals.ship)}</dd>
           </div>
-          <div className="flex justify-between pt-1 text-base font-semibold text-gray-900">
-            <span>Total</span>
-            <span>{formatINR(totals.total)}</span>
+          <div className="mt-1 flex justify-between border-t border-line pt-2.5 text-base font-bold text-[#332f29]">
+            <dt>Total</dt>
+            <dd>{formatINR(totals.total)}</dd>
           </div>
-        </div>
+        </dl>
       </fieldset>
 
       {error && (
-        <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p>
+        <p className="rounded-xl border-l-4 border-red-400 bg-red-50 px-4 py-3 text-sm font-medium text-red-700">
+          {error}
+        </p>
       )}
       {duplicate && (
-        <p className="rounded-lg bg-amber-50 px-3 py-2 text-sm text-amber-800">
+        <p className="rounded-xl border-l-4 border-amber-400 bg-amber-50 px-4 py-3 text-sm text-amber-800">
           This order already exists as{" "}
           <Link href={`/orders/${duplicate.id}`} className="font-semibold underline">
             {duplicate.no}
@@ -617,11 +638,15 @@ export function OrderForm({
         </p>
       )}
 
-      <div className="flex items-center gap-3">
-        <button type="submit" disabled={submitting} className={`${buttonPrimaryClass} disabled:opacity-60`}>
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+        <button
+          type="submit"
+          disabled={submitting}
+          className={`${buttonPrimaryClass} w-full sm:w-auto`}
+        >
           {submitting ? "Creating…" : "Create order"}
         </button>
-        <Link href="/orders" className={buttonSecondaryClass}>
+        <Link href="/orders" className={`${buttonSecondaryClass} w-full sm:w-auto`}>
           Cancel
         </Link>
       </div>

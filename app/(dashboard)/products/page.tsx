@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { PageHeader, buttonPrimaryClass } from "@/components/page-header";
 import { DataTable, tdClass } from "@/components/table";
 import { inputClass } from "@/components/form";
+import { Select } from "@/components/select";
 import { formatINR } from "@/lib/money";
 import { getCurrentRole, roleCan } from "@/lib/auth/roles";
 
@@ -15,7 +16,6 @@ export default async function ProductsPage({
 }) {
   const { q = "", active = "" } = await searchParams;
   const supabase = await createClient();
-  const canWrite = roleCan(await getCurrentRole(), "products.write");
 
   let query = supabase
     .from("products")
@@ -29,7 +29,9 @@ export default async function ProductsPage({
   if (active === "true") query = query.eq("active", true);
   if (active === "false") query = query.eq("active", false);
 
-  const { data: products } = await query;
+  // Role check (button gating) is independent of the list — fetch both at once.
+  const [role, { data: products }] = await Promise.all([getCurrentRole(), query]);
+  const canWrite = roleCan(role, "products.write");
   const rows = products ?? [];
 
   const ids = rows.map((p) => p.id);
@@ -67,11 +69,17 @@ export default async function ProductsPage({
             className={inputClass}
           />
         </div>
-        <select name="active" defaultValue={active} className={`${inputClass} w-auto`}>
-          <option value="">All</option>
-          <option value="true">Active only</option>
-          <option value="false">Inactive only</option>
-        </select>
+        <Select
+          name="active"
+          defaultValue={active}
+          ariaLabel="Status filter"
+          className="w-full sm:w-44"
+          options={[
+            { value: "", label: "All" },
+            { value: "true", label: "Active only" },
+            { value: "false", label: "Inactive only" },
+          ]}
+        />
         <button type="submit" className={buttonPrimaryClass}>
           Filter
         </button>

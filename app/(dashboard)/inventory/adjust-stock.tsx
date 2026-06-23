@@ -3,6 +3,7 @@
 import { useActionState, useEffect, useState } from "react";
 import { adjustStock } from "@/lib/inventory/actions";
 import { inputClass, SubmitButton } from "@/components/form";
+import { Select } from "@/components/select";
 import { buttonSecondaryClass } from "@/components/page-header";
 import type { FormState } from "@/lib/types";
 
@@ -53,11 +54,17 @@ function AdjustModal({
             >
               Field
             </label>
-            <select id="field" name="field" defaultValue="on_hand" className={inputClass}>
-              <option value="on_hand">On-hand stock</option>
-              <option value="damaged">Damaged stock</option>
-              <option value="low_stock_threshold">Low-stock threshold</option>
-            </select>
+            <Select
+              id="field"
+              name="field"
+              defaultValue="on_hand"
+              ariaLabel="Field"
+              options={[
+                { value: "on_hand", label: "On-hand stock" },
+                { value: "damaged", label: "Damaged stock" },
+                { value: "low_stock_threshold", label: "Low-stock threshold" },
+              ]}
+            />
           </div>
 
           <div>

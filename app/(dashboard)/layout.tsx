@@ -1,8 +1,8 @@
 import { redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
 import { type NavItem } from "@/components/nav-links";
 import { AppShell } from "@/components/app-shell";
 import { roleCan, ROLE_LABEL, type Role } from "@/lib/auth/roles";
+import { getClaims, getProfile } from "@/lib/auth/session";
 import { getAlertCount } from "@/lib/alerts/queries";
 
 export default async function DashboardLayout({
@@ -10,25 +10,20 @@ export default async function DashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  // Local JWT verification (no Auth-server round-trip); claims + profile are shared
+  // with the page below via React cache() so this work happens once per navigation.
+  const claims = await getClaims();
 
   // Backstop: middleware already redirects, but never render the shell signed-out.
-  if (!user) {
+  if (!claims) {
     redirect("/login");
   }
 
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("name, role")
-    .eq("id", user.id)
-    .maybeSingle();
+  // Profile and alert count are independent — run them together, not in sequence.
+  const [profile, alertCount] = await Promise.all([getProfile(), getAlertCount()]);
 
   const role = (profile?.role ?? null) as Role | null;
-  const displayName = profile?.name || user.email || "User";
-  const alertCount = await getAlertCount();
+  const displayName = profile?.name || claims.email || "User";
 
   // Everyone gets the operational pages (RLS scopes the data); the audit log and
   // settings are admin-only, so we hide them for other roles (RLS blocks them too).

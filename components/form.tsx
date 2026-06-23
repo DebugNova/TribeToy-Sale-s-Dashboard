@@ -2,8 +2,9 @@
 // these can render in either server or client components; they just keep Tailwind styling
 // consistent with the Phase 0 shell (see app/(dashboard)/settings/settings-form.tsx).
 
-import type { InputHTMLAttributes, SelectHTMLAttributes, TextareaHTMLAttributes } from "react";
+import type { InputHTMLAttributes, TextareaHTMLAttributes } from "react";
 import { Spinner } from "@/components/spinner";
+import { Select, type SelectOption } from "@/components/select";
 
 export const inputClass =
   "w-full rounded-xl border border-line bg-white px-3 py-2 text-sm text-[#3a352f] outline-none transition placeholder:text-[#b3a99b] focus:border-brand-400 focus:ring-2 focus:ring-brand-200 disabled:bg-cream-100 disabled:text-[#9a9084]";
@@ -48,17 +49,30 @@ export function SelectField({
   label,
   name,
   hint,
-  children,
-  ...rest
-}: { label: string; name: string; hint?: string } & SelectHTMLAttributes<HTMLSelectElement>) {
+  options,
+  defaultValue = "",
+  searchable,
+}: {
+  label: string;
+  name: string;
+  hint?: string;
+  options: SelectOption[];
+  defaultValue?: string;
+  searchable?: boolean;
+}) {
   return (
     <div>
       <FieldLabel htmlFor={name} hint={hint}>
         {label}
       </FieldLabel>
-      <select id={name} name={name} className={inputClass} {...rest}>
-        {children}
-      </select>
+      <Select
+        id={name}
+        name={name}
+        options={options}
+        defaultValue={defaultValue}
+        searchable={searchable}
+        ariaLabel={label}
+      />
     </div>
   );
 }

@@ -7,7 +7,9 @@ sales analytics. Built lean now, on a schema/architecture designed to grow into 
 "Commerce OS" vision without a rewrite.
 
 > **Status (2026-06):** Phases **0–5 complete & verified — v1 is feature-complete**, plus a
-> brand/UI redesign (see [Design system](#design-system)). See [PROGRESS.md](PROGRESS.md) for
+> brand/UI redesign — lighter green, a custom `Select` replacing every native dropdown, a custom
+> `DateRangePicker`, and more detailed charts (see [Frontend & UI/UX rules](#frontend--uiux-rules-read-before-any-ui-task)
+> + [Design system](#design-system)). See [PROGRESS.md](PROGRESS.md) for
 > the per-phase ledger and [AUDIT.md](AUDIT.md) for the last A–Z re-verification (build/lint
 > clean, live DB matches code). Migrations **0001–0010** are applied. Before go-live, see
 > AUDIT.md §3.3 chores (rotate keys, remove `*.test@tribetoy.test` users, change the founder
@@ -42,8 +44,11 @@ Env vars live in `.env.local` (not committed): `NEXT_PUBLIC_SUPABASE_URL`,
 ### `app/` — routes (App Router)
 - `(auth)/login/` — sign-in screen (client; Supabase password auth).
 - `(dashboard)/` — the authenticated app. `layout.tsx` checks auth + loads role and renders
-  the shell; `page.tsx` is the analytics dashboard; `dashboard-charts.tsx` + `filter-bar.tsx`
-  are its client pieces. Sub-routes: `orders/`, `products/`, `customers/`, `inventory/`,
+  the shell; `page.tsx` is the analytics dashboard. Its client pieces: `filter-bar.tsx`
+  (filters → URL query, Apply/Reset run in a `useTransition`), `date-range-picker.tsx` (custom
+  branded calendar — **not** a native date input), `dashboard-charts.tsx` (Recharts: gradients,
+  branded tooltip, avg reference line, area fill, value labels), `top-skus.tsx` (sort-tab swap
+  with a loading transition). Sub-routes: `orders/`, `products/`, `customers/`, `inventory/`,
   `shipments/`, `alerts/`, `audit/`, `settings/` (each has `page.tsx` + local `*-form` /
   panel client components).
 - `api/intake/website/route.ts` — signed (HMAC) webhook that ingests website orders.
@@ -75,8 +80,14 @@ Env vars live in `.env.local` (not committed): `NEXT_PUBLIC_SUPABASE_URL`,
 - `app-shell.tsx` — responsive chrome: sidebar on desktop, slide-in drawer on mobile.
 - `brand-logo.tsx`, `nav-links.tsx` (route icons + active states).
 - `page-header.tsx` — exports **`buttonPrimaryClass` / `buttonSecondaryClass`**.
-- `form.tsx` — exports **`inputClass`**, `SubmitButton`, field wrappers.
+- `form.tsx` — exports **`inputClass`**, `SubmitButton`, `TextField`, `SelectField`
+  (wraps `Select`), field wrappers.
+- **`select.tsx` — the one custom dropdown** (`Select` + `SelectOption`). Keyboard nav,
+  optional `searchable`, click-outside/Esc, ARIA listbox; hidden `<input>` for forms.
+  **Use it for every dropdown — never a native `<select>`.** Modes: controlled
+  (`value`+`onValueChange`), uncontrolled (`defaultValue`), or form (`name`).
 - `table.tsx` — exports **`thClass` / `tdClass` / `DataTable`**.
+- `spinner.tsx` (`Spinner`, `HamburgerLoader`, `LoadingState`), `skeleton.tsx`.
 - `panel.tsx`, `kpi-card.tsx`, `status-badge.tsx`, `export-csv-button.tsx`,
   `label-download-button.tsx`, `reveal-field.tsx`, `page-placeholder.tsx`.
 
@@ -109,18 +120,60 @@ the phase docs' later labels are offset by Phase 0 — trust the folder.
 - Match the style/conventions of surrounding code. Confirm before creating paid cloud
   resources or deploying.
 
+## Frontend & UI/UX rules (read before ANY UI task)
+
+These are hard rules, learned from real feedback on this repo. Follow them so a UI request is
+done **right and in full on the first pass**.
+
+1. **Scope it before you touch code.** Restate what "done" means for the request, then make a
+   short todo list and do *all* of it. The user's UI asks are broad on purpose ("professional
+   everywhere", "best UI/UX") — that means **every matching instance**, not one example. Doing
+   one and stopping is the #1 mistake here; don't repeat it.
+2. **Never ship a native browser control in the UI.** They look dated and are the first thing
+   the user rejects. Specifically:
+   - Dropdowns → **`Select` from `components/select.tsx`** (never `<select>`/`<option>`).
+   - Date / date-range → **`DateRangePicker`** (`app/(dashboard)/date-range-picker.tsx`), never
+     `<input type="date">`. (Two single-date filters on `orders`/`audit` are the only remaining
+     native date inputs — replace them too if you touch those forms.)
+   - Custom popovers must be: whole trigger clickable (not just an icon), keyboard-accessible,
+     close on outside-click/Esc, animate with `.animate-fade-rise`.
+3. **Apply a pattern site-wide.** Before saying a UI pattern is done, `grep` the whole repo for
+   every instance (e.g. ``<select``, ``type="date"``, the class you changed) and update each
+   one. "Professionalize the dropdowns" means *all* dropdowns on *all* pages.
+4. **"Modernize / professionalize / make it best UI-UX" decodes to:** replace native controls
+   with the custom branded components, add real detail (gradients, branded tooltips, loading
+   transitions, hover/active/focus states, empty states), and keep it visually consistent —
+   *not* just a colour tweak. A colour change alone will be rejected.
+5. **Restyle via the shared primitives so it cascades** (see Design system). Don't hand-style
+   one page; change `select.tsx` / `form.tsx` / `page-header.tsx` / `table.tsx` / `panel` /
+   `kpi-card` / globals.css tokens and let every page inherit it.
+6. **Green is intentionally light.** The brand ramp in `globals.css` was lightened (primary
+   `brand-600 #5f9e2b`). Keep greens in this light spring-leaf range; don't darken back.
+7. **Verify, then be honest.** Always `npm run build` (type-check) **and** `npm run lint` before
+   claiming done. For visible UI, offer to run `npm run dev` and say plainly what you did and
+   did **not** visually confirm (the dashboard is auth-gated; there's no browser tool in-session,
+   so screenshots aren't available — don't claim a screenshot you didn't take).
+
+**Definition of done for a UI change:** build clean · lint clean · every matching instance
+updated · no native `<select>`/date input introduced · responsive (mobile drawer + small
+screens) · keyboard + focus states intact · honest note on what was/wasn't visually checked.
+
 ## Design system
 
-UI matches the TribeToy storefront: **leaf-green / blush-pink / warm-cream**. Tokens live in
-[app/globals.css](app/globals.css) under Tailwind v4 `@theme`, so utilities like `bg-brand-600`,
-`text-blush-500`, `bg-cream-100`, `border-line` exist app-wide. Font is **Nunito** (variable,
-self-hosted via `next/font`); mono kept for SKUs/AWBs.
+UI matches the TribeToy storefront: **light leaf-green / blush-pink / warm-cream**. Tokens live
+in [app/globals.css](app/globals.css) under Tailwind v4 `@theme`, so utilities like `bg-brand-600`,
+`text-blush-500`, `bg-cream-100`, `border-line` exist app-wide. The green ramp is intentionally
+**light** (primary `brand-600 #5f9e2b`). Font is **Nunito** (variable, self-hosted via
+`next/font`); mono kept for SKUs/AWBs. Reusable motion keyframes live in `globals.css`:
+`.animate-fade-rise` (popovers), `.animate-drawer`, `.skeleton`, `.spinner`, `.hamburger-loader`
+— all frozen under `prefers-reduced-motion`.
 
 **To restyle, edit the shared primitives — they cascade to every page** (the class constants
 in `page-header.tsx`, `form.tsx`, `table.tsx`, plus `panel`/`kpi-card`/`status-badge`/
-`nav-links`). Layout/responsiveness lives in `app-shell.tsx`. Logo: `public/tribetoy-logo.png`.
-Body-text `text-gray-*` was intentionally left (reads fine on cream); the dark code block in
-`settings/intake-panel.tsx` is intentional. Keep it responsive + light for low-end devices.
+`nav-links`, and the `Select` in `select.tsx`). Layout/responsiveness lives in `app-shell.tsx`.
+Logo: `public/tribetoy-logo.png`. Body-text `text-gray-*` was intentionally left (reads fine on
+cream); the dark code block in `settings/intake-panel.tsx` is intentional. Keep it responsive +
+light for low-end devices.
 
 ---
 

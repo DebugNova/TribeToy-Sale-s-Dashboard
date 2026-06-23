@@ -27,10 +27,15 @@ export function CustomerForm({ customer }: { customer?: Customer | null }) {
         <legend className="px-1 text-sm font-semibold text-gray-900">Contact</legend>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <TextField label="Name" name="name" defaultValue={customer?.name ?? ""} required />
-          <SelectField label="Type" name="type" defaultValue={customer?.type ?? "b2c"}>
-            <option value="b2c">B2C (consumer)</option>
-            <option value="b2b">B2B (dealer)</option>
-          </SelectField>
+          <SelectField
+            label="Type"
+            name="type"
+            defaultValue={customer?.type ?? "b2c"}
+            options={[
+              { value: "b2c", label: "B2C (consumer)" },
+              { value: "b2b", label: "B2B (dealer)" },
+            ]}
+          />
           <TextField
             label="Phone"
             name="phone"

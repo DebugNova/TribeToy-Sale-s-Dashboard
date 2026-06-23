@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { generateLabel, updateShipmentAwb } from "@/lib/labels/pdf";
 import { LabelDownloadButton } from "@/components/label-download-button";
 import { inputClass } from "@/components/form";
+import { Select } from "@/components/select";
 import { buttonSecondaryClass } from "@/components/page-header";
 import { COURIER_LABEL } from "@/lib/labels/courier";
 import { Constants } from "@/lib/supabase/database.types";
@@ -111,17 +112,15 @@ export function LabelPanel({
   }
 
   const courierSelect = (
-    <select
+    <Select
       value={courier}
-      onChange={(e) => setCourier(e.target.value as CourierType)}
-      className={inputClass}
-    >
-      {Constants.public.Enums.courier_type.map((c) => (
-        <option key={c} value={c}>
-          {COURIER_LABEL[c]}
-        </option>
-      ))}
-    </select>
+      onValueChange={(v) => setCourier(v as CourierType)}
+      ariaLabel="Courier"
+      options={Constants.public.Enums.courier_type.map((c) => ({
+        value: c,
+        label: COURIER_LABEL[c],
+      }))}
+    />
   );
 
   return (

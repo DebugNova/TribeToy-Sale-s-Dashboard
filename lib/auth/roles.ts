@@ -1,6 +1,6 @@
 import "server-only";
 import { redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
+import { getProfile } from "./session";
 import type { Database } from "@/lib/supabase/database.types";
 
 export type Role = Database["public"]["Enums"]["user_role"];
@@ -36,19 +36,14 @@ export function roleCan(role: Role | null, cap: Capability): boolean {
   return (CAPABILITIES[cap] as readonly Role[]).includes(role);
 }
 
-/** The caller's app role (profiles.role), or null if unauthenticated. */
+/**
+ * The caller's app role (profiles.role), or null if unauthenticated. Reads the
+ * request-cached profile from `lib/auth/session` — no extra auth/network round-trip
+ * even when called alongside the dashboard layout (which loads the same profile).
+ */
 export async function getCurrentRole(): Promise<Role | null> {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) return null;
-  const { data } = await supabase
-    .from("profiles")
-    .select("role")
-    .eq("id", user.id)
-    .maybeSingle();
-  return data?.role ?? null;
+  const profile = await getProfile();
+  return profile?.role ?? null;
 }
 
 /**

@@ -2,6 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { PageHeader, buttonPrimaryClass } from "@/components/page-header";
 import { DataTable, tdClass } from "@/components/table";
 import { inputClass } from "@/components/form";
+import { Select } from "@/components/select";
 import { AdjustStockButton } from "./adjust-stock";
 import { getCurrentRole, roleCan } from "@/lib/auth/roles";
 
@@ -14,7 +15,6 @@ export default async function InventoryPage({
 }) {
   const { q = "", low = "" } = await searchParams;
   const supabase = await createClient();
-  const canWrite = roleCan(await getCurrentRole(), "inventory.write");
 
   let pQuery = supabase
     .from("products")
@@ -24,7 +24,9 @@ export default async function InventoryPage({
     const term = q.trim();
     pQuery = pQuery.or(`name.ilike.%${term}%,sku.ilike.%${term}%`);
   }
-  const { data: products } = await pQuery;
+  // Role check (button gating) is independent of the list — fetch both at once.
+  const [role, { data: products }] = await Promise.all([getCurrentRole(), pQuery]);
+  const canWrite = roleCan(role, "inventory.write");
   const productList = products ?? [];
 
   const ids = productList.map((p) => p.id);
@@ -62,10 +64,16 @@ export default async function InventoryPage({
             className={inputClass}
           />
         </div>
-        <select name="low" defaultValue={low} className={`${inputClass} w-auto`}>
-          <option value="">All stock</option>
-          <option value="true">Low stock only</option>
-        </select>
+        <Select
+          name="low"
+          defaultValue={low}
+          ariaLabel="Stock filter"
+          className="w-full sm:w-44"
+          options={[
+            { value: "", label: "All stock" },
+            { value: "true", label: "Low stock only" },
+          ]}
+        />
         <button type="submit" className={buttonPrimaryClass}>
           Filter
         </button>

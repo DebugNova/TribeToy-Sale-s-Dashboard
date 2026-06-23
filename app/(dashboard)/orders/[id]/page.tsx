@@ -40,15 +40,13 @@ export default async function OrderDetailPage({
   const { id } = await params;
   const supabase = await createClient();
 
-  const role = await getCurrentRole();
+  // Role check is independent of the order fetch — run them together.
+  const [role, { data: order }] = await Promise.all([
+    getCurrentRole(),
+    supabase.from("orders").select("*").eq("id", id).maybeSingle(),
+  ]);
   const canWriteOrders = roleCan(role, "orders.write");
   const canManageShipments = roleCan(role, "shipments.write");
-
-  const { data: order } = await supabase
-    .from("orders")
-    .select("*")
-    .eq("id", id)
-    .maybeSingle();
   if (!order) notFound();
 
   const [{ data: items }, { data: customer }, { data: audit }, { data: settings }, { data: shipment }] =

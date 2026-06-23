@@ -16,7 +16,6 @@ export default async function CustomersPage({
 }) {
   const { q = "" } = await searchParams;
   const supabase = await createClient();
-  const canWrite = roleCan(await getCurrentRole(), "customers.write");
 
   let query = supabase
     .from("customers")
@@ -30,7 +29,9 @@ export default async function CustomersPage({
     );
   }
 
-  const { data: customers } = await query;
+  // Role check (button gating) is independent of the list — fetch both at once.
+  const [role, { data: customers }] = await Promise.all([getCurrentRole(), query]);
+  const canWrite = roleCan(role, "customers.write");
   const rows = customers ?? [];
 
   return (

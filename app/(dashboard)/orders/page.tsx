@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { PageHeader, buttonPrimaryClass, buttonSecondaryClass } from "@/components/page-header";
 import { DataTable, tdClass } from "@/components/table";
 import { inputClass } from "@/components/form";
+import { Select } from "@/components/select";
 import {
   StatusBadge,
   PaymentStatusBadge,
@@ -31,7 +32,6 @@ export default async function OrdersPage({
 }) {
   const { q = "", status = "", channel = "", from = "", to = "" } = await searchParams;
   const supabase = await createClient();
-  const canWrite = roleCan(await getCurrentRole(), "orders.write");
 
   let query = supabase
     .from("orders")
@@ -52,7 +52,9 @@ export default async function OrdersPage({
   if (from) query = query.gte("created_at", `${from}T00:00:00+05:30`);
   if (to) query = query.lte("created_at", `${to}T23:59:59+05:30`);
 
-  const { data: orders } = await query;
+  // Role check (button gating) is independent of the list — fetch both at once.
+  const [role, { data: orders }] = await Promise.all([getCurrentRole(), query]);
+  const canWrite = roleCan(role, "orders.write");
   const rows = orders ?? [];
 
   return (
@@ -82,22 +84,31 @@ export default async function OrdersPage({
           placeholder="Order #, customer or phone…"
           className={`${inputClass} sm:col-span-2`}
         />
-        <select name="status" defaultValue={status} className={inputClass}>
-          <option value="">All statuses</option>
-          {Constants.public.Enums.order_status.map((s) => (
-            <option key={s} value={s}>
-              {STATUS_LABEL[s]}
-            </option>
-          ))}
-        </select>
-        <select name="channel" defaultValue={channel} className={inputClass}>
-          <option value="">All channels</option>
-          {Constants.public.Enums.order_channel.map((c) => (
-            <option key={c} value={c}>
-              {CHANNEL_LABEL[c]}
-            </option>
-          ))}
-        </select>
+        <Select
+          name="status"
+          defaultValue={status}
+          ariaLabel="Status"
+          searchable
+          options={[
+            { value: "", label: "All statuses" },
+            ...Constants.public.Enums.order_status.map((s) => ({
+              value: s,
+              label: STATUS_LABEL[s],
+            })),
+          ]}
+        />
+        <Select
+          name="channel"
+          defaultValue={channel}
+          ariaLabel="Channel"
+          options={[
+            { value: "", label: "All channels" },
+            ...Constants.public.Enums.order_channel.map((c) => ({
+              value: c,
+              label: CHANNEL_LABEL[c],
+            })),
+          ]}
+        />
         <input type="date" name="from" defaultValue={from} className={inputClass} />
         <input type="date" name="to" defaultValue={to} className={inputClass} />
         <div className="sm:col-span-6">

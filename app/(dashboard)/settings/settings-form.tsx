@@ -6,6 +6,7 @@ import {
   type SettingsFormState,
 } from "./actions";
 import { inputClass } from "@/components/form";
+import { Select } from "@/components/select";
 import type { Tables } from "@/lib/supabase/database.types";
 
 const initialState: SettingsFormState = { ok: false, message: "" };
@@ -110,18 +111,13 @@ export function SettingsForm({ settings }: { settings: Tables<"settings"> }) {
           >
             Default courier
           </label>
-          <select
+          <Select
             id="default_courier"
             name="default_courier"
             defaultValue={settings.default_courier}
-            className={inputClass}
-          >
-            {COURIERS.map((c) => (
-              <option key={c.value} value={c.value}>
-                {c.label}
-              </option>
-            ))}
-          </select>
+            ariaLabel="Default courier"
+            options={COURIERS.map((c) => ({ value: c.value, label: c.label }))}
+          />
         </div>
       </fieldset>
 

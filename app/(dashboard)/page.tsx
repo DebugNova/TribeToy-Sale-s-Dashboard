@@ -21,22 +21,18 @@ import {
   parseFilters,
   isTopSkuSort,
   filtersToQuery,
+  istToday,
   type TopSkuSort,
 } from "@/lib/analytics/types";
 import { FilterBar } from "./filter-bar";
+import { TopSkus } from "./top-skus";
 import {
   RevenueTrendChart,
   OrdersTrendChart,
   ChannelSplitChart,
-} from "./dashboard-charts";
+} from "./dashboard-charts-lazy";
 
 type SearchParams = Promise<Record<string, string | string[] | undefined>>;
-
-const SKU_SORTS: { key: TopSkuSort; label: string }[] = [
-  { key: "qty", label: "Quantity" },
-  { key: "revenue", label: "Revenue" },
-  { key: "margin", label: "Margin" },
-];
 
 export default async function DashboardPage({
   searchParams,
@@ -62,15 +58,9 @@ export default async function DashboardPage({
       getFilterOptions(),
     ]);
 
-  // CSV matrices (money pre-formatted as INR so the export reads correctly).
-  const topSkuCsv = topSkus.map((s) => [
-    s.sku ?? "",
-    s.name ?? "",
-    s.category ?? "",
-    s.qty,
-    formatINR(s.revenue),
-    formatINR(s.margin),
-  ]);
+  // CSV matrices (money pre-formatted as INR so the export reads correctly). Filenames are
+  // stamped with today's IST day so repeated exports stay sortable on disk.
+  const today = istToday();
   const lowStockCsv = lowStock.map((r) => [
     r.sku,
     r.name,
@@ -133,54 +123,13 @@ export default async function DashboardPage({
         </Panel>
       </div>
 
-      {/* Top SKUs */}
-      <div className="mb-6">
-        <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
-          <h2 className="text-sm font-bold text-[#332f29]">Top SKUs</h2>
-          <div className="flex items-center gap-3">
-            <div className="inline-flex overflow-hidden rounded-xl border border-line text-xs">
-              {SKU_SORTS.map((s) => {
-                const active = s.key === skuSort;
-                return (
-                  <Link
-                    key={s.key}
-                    href={`/?${filtersToQuery(filters, { skuSort: s.key })}`}
-                    className={`px-3 py-1.5 font-semibold transition ${
-                      active
-                        ? "bg-brand-600 text-white"
-                        : "bg-white text-[#7a7066] hover:bg-brand-50 hover:text-brand-700"
-                    }`}
-                    scroll={false}
-                  >
-                    {s.label}
-                  </Link>
-                );
-              })}
-            </div>
-            <ExportCsvButton
-              filename="top-skus.csv"
-              headers={["SKU", "Product", "Category", "Qty", "Revenue (INR)", "Margin (INR)"]}
-              rows={topSkuCsv}
-            />
-          </div>
-        </div>
-        <DataTable
-          columns={["SKU", "Product", "Category", "Qty", "Revenue", "Margin"]}
-          isEmpty={topSkus.length === 0}
-          emptyMessage="No sales in this range yet."
-        >
-          {topSkus.map((s) => (
-            <tr key={s.productId ?? s.sku} className="hover:bg-gray-50">
-              <td className={`${tdClass} font-mono text-xs text-gray-600`}>{s.sku ?? "—"}</td>
-              <td className={`${tdClass} font-medium text-gray-900`}>{s.name ?? "—"}</td>
-              <td className={tdClass}>{s.category ?? "—"}</td>
-              <td className={tdClass}>{s.qty}</td>
-              <td className={tdClass}>{formatINR(s.revenue)}</td>
-              <td className={tdClass}>{formatINR(s.margin)}</td>
-            </tr>
-          ))}
-        </DataTable>
-      </div>
+      {/* Top SKUs — client section with a smooth sort-tab loading transition. */}
+      <TopSkus
+        rows={topSkus}
+        sort={skuSort}
+        baseQuery={filtersToQuery(filters)}
+        exportDate={today}
+      />
 
       {/* Low stock + packing backlog */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
@@ -188,7 +137,7 @@ export default async function DashboardPage({
           <div className="mb-3 flex items-center justify-between gap-3">
             <h2 className="text-sm font-bold text-[#332f29]">Low-stock alerts</h2>
             <ExportCsvButton
-              filename="low-stock.csv"
+              filename={`low-stock_${today}.csv`}
               headers={["SKU", "Product", "Category", "On hand", "Reserved", "Available", "Threshold"]}
               rows={lowStockCsv}
             />
@@ -213,7 +162,7 @@ export default async function DashboardPage({
           <div className="mb-3 flex items-center justify-between gap-3">
             <h2 className="text-sm font-bold text-[#332f29]">Packing backlog</h2>
             <ExportCsvButton
-              filename="packing-backlog.csv"
+              filename={`packing-backlog_${today}.csv`}
               headers={["Order #", "Status", "Channel", "Customer", "Total (INR)", "Age (days)", "Created"]}
               rows={backlogCsv}
             />

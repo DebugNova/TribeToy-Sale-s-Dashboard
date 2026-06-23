@@ -13,13 +13,12 @@ export default async function EditCustomerPage({
 }) {
   const { id } = await params;
   const supabase = await createClient();
-  const canWrite = roleCan(await getCurrentRole(), "customers.write");
 
-  const { data: customer } = await supabase
-    .from("customers")
-    .select("*")
-    .eq("id", id)
-    .maybeSingle();
+  const [role, { data: customer }] = await Promise.all([
+    getCurrentRole(),
+    supabase.from("customers").select("*").eq("id", id).maybeSingle(),
+  ]);
+  const canWrite = roleCan(role, "customers.write");
   if (!customer) notFound();
 
   return (

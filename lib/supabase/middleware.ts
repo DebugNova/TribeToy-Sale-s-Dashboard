@@ -8,7 +8,13 @@ import type { Database } from "./database.types";
  * authenticated users hitting /login are sent to the dashboard.
  *
  * Follows the @supabase/ssr middleware pattern — do NOT add logic between
- * createServerClient and supabase.auth.getUser().
+ * createServerClient and supabase.auth.getClaims().
+ *
+ * Uses getClaims() (not getUser()): with asymmetric JWT signing keys the access
+ * token is verified LOCALLY against a process-cached JWKS, so there is no network
+ * round-trip to the Auth server on every request — getUser() always made one.
+ * getClaims() still refreshes an expired token (and persists the rotated cookies
+ * via setAll below), which is what keeps SSR sessions from being logged out.
  */
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({ request });
@@ -34,9 +40,8 @@ export async function updateSession(request: NextRequest) {
     },
   );
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const { data } = await supabase.auth.getClaims();
+  const isAuthed = Boolean(data?.claims?.sub);
 
   const { pathname } = request.nextUrl;
   const isLoginRoute = pathname === "/login";
@@ -45,14 +50,14 @@ export async function updateSession(request: NextRequest) {
   const isPublicApi = pathname.startsWith("/api/intake");
 
   // Not signed in -> force to /login (login route + public APIs stay accessible).
-  if (!user && !isLoginRoute && !isPublicApi) {
+  if (!isAuthed && !isLoginRoute && !isPublicApi) {
     const url = request.nextUrl.clone();
     url.pathname = "/login";
     return NextResponse.redirect(url);
   }
 
   // Already signed in but on /login -> send to the dashboard.
-  if (user && isLoginRoute) {
+  if (isAuthed && isLoginRoute) {
     const url = request.nextUrl.clone();
     url.pathname = "/";
     return NextResponse.redirect(url);

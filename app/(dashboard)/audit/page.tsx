@@ -1,6 +1,7 @@
 import { PageHeader, buttonPrimaryClass, buttonSecondaryClass } from "@/components/page-header";
 import { DataTable, tdClass } from "@/components/table";
 import { inputClass } from "@/components/form";
+import { Select } from "@/components/select";
 import { createClient } from "@/lib/supabase/server";
 import { requireCapability } from "@/lib/auth/roles";
 import { formatDateTime } from "@/lib/format";
@@ -57,25 +58,30 @@ export default async function AuditPage({ searchParams }: { searchParams: Search
       <form method="get" className="mb-4 flex flex-wrap items-end gap-3">
         <div>
           <label className="mb-1 block text-xs font-medium text-gray-500">Entity</label>
-          <select name="entity" defaultValue={sp.entity ?? ""} className={inputClass}>
-            <option value="">All entities</option>
-            {entities.map((e) => (
-              <option key={e} value={e}>
-                {e}
-              </option>
-            ))}
-          </select>
+          <Select
+            name="entity"
+            defaultValue={sp.entity ?? ""}
+            ariaLabel="Entity"
+            className="w-48"
+            options={[
+              { value: "", label: "All entities" },
+              ...entities.map((e) => ({ value: e, label: e })),
+            ]}
+          />
         </div>
         <div>
           <label className="mb-1 block text-xs font-medium text-gray-500">Actor</label>
-          <select name="actor" defaultValue={sp.actor ?? ""} className={inputClass}>
-            <option value="">All actors</option>
-            {actors.map((a) => (
-              <option key={a.id} value={a.id}>
-                {a.name ?? a.id}
-              </option>
-            ))}
-          </select>
+          <Select
+            name="actor"
+            defaultValue={sp.actor ?? ""}
+            ariaLabel="Actor"
+            searchable
+            className="w-48"
+            options={[
+              { value: "", label: "All actors" },
+              ...actors.map((a) => ({ value: a.id, label: a.name ?? a.id })),
+            ]}
+          />
         </div>
         <div>
           <label className="mb-1 block text-xs font-medium text-gray-500">From</label>

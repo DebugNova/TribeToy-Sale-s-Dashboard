@@ -10,17 +10,17 @@
   --font-sans: var(--font-nunito);
   --font-mono: var(--font-geist-mono);
 
-  /* Leaf green — primary brand (fresh, lighter spring-leaf tone) */
-  --color-brand-50: #f4faea;
-  --color-brand-100: #e6f4cf;
-  --color-brand-200: #cde8a3;
-  --color-brand-300: #aed975;
-  --color-brand-400: #8fc846;
-  --color-brand-500: #6fad2e;
-  --color-brand-600: #54902a;
-  --color-brand-700: #437121;
-  --color-brand-800: #375d1f;
-  --color-brand-900: #2f4d1d;
+  /* Leaf green — primary brand (fresh, light spring-leaf tone) */
+  --color-brand-50: #f5fbe9;
+  --color-brand-100: #e8f6cd;
+  --color-brand-200: #d3eda3;
+  --color-brand-300: #b6e074;
+  --color-brand-400: #99d04c;
+  --color-brand-500: #7fbb34;
+  --color-brand-600: #5f9e2b;
+  --color-brand-700: #4c7f24;
+  --color-brand-800: #3f681f;
+  --color-brand-900: #35551d;
 
   /* Blush pink — accent */
   --color-blush-50: #fdf2f7;
@@ -98,6 +98,23 @@ body {
 }
 .animate-drawer {
   animation: slide-in-left 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Soft rise-and-fade used when freshly fetched content swaps in (e.g. the Top
+   SKUs table after switching its Quantity / Revenue / Margin sort). Keyed on the
+   data so it re-triggers each swap; frozen by the reduced-motion rule above. */
+@keyframes fade-rise {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.animate-fade-rise {
+  animation: fade-rise 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 /* ───────────────────────── Loading system ─────────────────────────

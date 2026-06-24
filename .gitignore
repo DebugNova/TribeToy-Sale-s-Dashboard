@@ -35,6 +35,10 @@ yarn-error.log*
 # ...but DO track the safe placeholder template (no secrets in it)
 !.env.example
 
+# local credentials / secrets — never commit
+*.secret.md
+OWNER-CREDENTIALS.local.md
+
 # vercel
 .vercel
 
